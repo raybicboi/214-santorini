@@ -23,26 +23,12 @@ public class Board {
     }
 
     // methods
-    public boolean isValidTile(Tile t) {
-        return true;
-    }
-
-    public boolean isValidBoard(Player p1, Player p2) {
-        return true;
+    public void resetBoard() {
+        for (Tile t : this.tileList) {
+            t.resetTile();
+        }
     }
 
     // helper methods
-    private boolean playerStuck(Player a) {
-        for (Worker w : a.getWorkerList()) {
-            if (!w.isStuck(this)) return false;
-        }
-        return true;
-    }
 
-    private boolean winner (Player a) {
-        for (Worker w : a.getWorkerList()) {
-            if (w.reachedThird()) return true;
-        }
-        return false;
-    }
 }

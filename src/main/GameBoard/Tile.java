@@ -46,7 +46,7 @@ public class Tile {
         return this.hasWorker;
     }
 
-    // other methods
+    // methods
     public boolean isLegalMoveTile(Tile other) {
         return this.tileCheck(other);
     }
@@ -57,6 +57,11 @@ public class Tile {
 
     public boolean isValidTile(Tile other) {
         return (this.isLegalBuildTile(other) && this.isLegalMoveTile(other));
+    }
+
+    public void resetTile() {
+        this.currentLevel = 0;
+        this.hasWorker = false;
     }
 
     // helper methods

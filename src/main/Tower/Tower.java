@@ -26,7 +26,4 @@ public class Tower {
         return true;
     }
 
-//    public int levelsFromTile(Tile tile) {
-//
-//    }
 }
