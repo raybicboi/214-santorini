@@ -9,8 +9,8 @@ public class Tile {
 
     // arg constructor
     public Tile(int x, int y) {
-        assert x > -1 && x < 5;
-        assert y > -1 && y < 5;
+//        assert x > -1 && x < 5;
+//        assert y > -1 && y < 5;
         // assert coordinates cannot be repeated?
         this.x = x;
         this.y = y;

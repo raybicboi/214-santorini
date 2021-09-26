@@ -14,7 +14,7 @@ public class Worker {
 //        this.playerAssociated = playerAssociated;
 //    }
 
-    // no arg constructor (does it need player associated?
+    // no arg constructor (does it need player associated?)
     public Worker() {}
 
     // getters methods
@@ -27,14 +27,35 @@ public class Worker {
 //    }
 
     // methods
+    public boolean initDrop(Tile t, Board b) {
+        if (this.currentTile != null) {
+            System.out.println("Worker is already on another tile");
+            return false;
+        }
+        // make sure there are no buildings, no other players in that spot
+        if (t.getHasWorker()) {
+            System.out.println("This tile already has another worker");
+            return false;
+        }
+        for (Tile tile : b.getTileList()) {
+            if (tile.getCurrentLevel() != 0) {
+                System.out.println("Game already started! Cannot drop worker");
+                return false;
+            }
+        }
+        this.currentTile = t;
+        t.jumped();
+        return true;
+    }
+
     public boolean relocate(Tile t) {
         if (!currentTile.isLegalMoveTile(t)) {
             System.out.println("Cannot move to this tile!");
             return false;
         }
-        this.currentTile = t;
-        currentTile.jumped();
+        this.currentTile.jumped();
         t.jumped();
+        this.currentTile = t;
         return true;
     }
 

@@ -11,7 +11,7 @@ public class Board {
     // constructor
     public Board() {
         this.tileList = new ArrayList<Tile>(25);
-        assert tileList.size() == 25;
+//        assert this.tileList.size() == 25;
     }
 
     // setters

@@ -50,7 +50,6 @@ public class SetupTest {
     public Worker w21;
     public Worker w22;
 
-    @Before
     public void setUp() {
         t00 = new Tile(0, 0);
         t01 = new Tile(0, 1);
@@ -121,5 +120,10 @@ public class SetupTest {
         p1.addNewWorker(w12);
         p2.addNewWorker(w21);
         p2.addNewWorker(w22);
+
+        w11.initDrop(t00, board);
+        w12.initDrop(t13, board);
+        w21.initDrop(t44, board);
+        w22.initDrop(t32, board);
     }
 }
