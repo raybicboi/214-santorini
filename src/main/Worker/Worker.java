@@ -6,22 +6,25 @@ import main.Player.Player;
 
 public class Worker {
 
-    private Player playerAssociated; // can be final
+//    private Player playerAssociated; // can be final
     private Tile currentTile;
 
     // arg constructor
-    public Worker(Player playerAssociated) {
-        this.playerAssociated = playerAssociated;
-    }
+//    public Worker(Player playerAssociated) {
+//        this.playerAssociated = playerAssociated;
+//    }
+
+    // no arg constructor (does it need player associated?
+    public Worker() {}
 
     // getters methods
     public Tile getCurrentTile() {
         return this.currentTile;
     }
 
-    public Player getPlayerAssociated() {
-        return this.playerAssociated;
-    }
+//    public Player getPlayerAssociated() {
+//        return this.playerAssociated;
+//    }
 
     // methods
     public boolean relocate(Tile t) {

@@ -1,8 +1,5 @@
 package main.GameBoard;
 
-import main.Player.Player;
-import main.Worker.Worker;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +12,11 @@ public class Board {
     public Board() {
         this.tileList = new ArrayList<Tile>(25);
         assert tileList.size() == 25;
+    }
+
+    // setters
+    public void addTile(Tile t) {
+        this.tileList.add(t);
     }
 
     // getters
