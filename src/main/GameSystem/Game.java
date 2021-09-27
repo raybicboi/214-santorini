@@ -20,6 +20,14 @@ public class Game {
     // setter method
     public boolean addPlayer(Player p) {
         try {
+            if (this.playerList.size() == 2) {
+                System.out.println("Can only have two players in this game");
+                return false;
+            }
+            if (this.playerList.contains(p)) {
+                System.out.println("Player is already in the game");
+                return false;
+            }
             this.playerList.add(p);
             return true;
         } catch (Exception e) {
@@ -38,14 +46,31 @@ public class Game {
     }
 
     // method
+    public Player getWinner(Player p1, Player p2) {
+        if (isValidGame()) return null;
+        if (!this.playerList.contains(p1)) return null;
+        if (!this.playerList.contains(p2)) return null;
+        if (p1.isPlayerStuck(this.gameBoard)) {
+            loser(p1);
+            return p2;
+        } else if (p2.isPlayerStuck(this.gameBoard)) {
+            loser(p2);
+            return p1;
+        }
+        if (p1.isWinner()) {
+            winner(p1);
+            return p1;
+        }
+        winner(p2);
+        return p2;
+    }
+
     public boolean isValidGame() {
         for (Player p : this.playerList) {
-            if (p.isPlayerStuck(gameBoard)) {
-                loser(p);
+            if (p.isPlayerStuck(this.gameBoard)) {
                 return false;
             }
             if (p.isWinner()) {
-                winner(p);
                 return false;
             }
         }

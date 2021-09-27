@@ -16,12 +16,26 @@ public class Player {
     }
 
     // setter method
-    public void addNewWorker(Worker w) {
+    public boolean addNewWorker(Worker w) {
+        if (this.workerList.size() >= 2) {
+            System.out.println("This player already has two workers");
+            return false;
+        }
+        if (this.workerList.contains(w)) {
+            System.out.println("This player already has this worker");
+            return false;
+        }
         this.workerList.add(w);
+        return true;
     }
 
-    public void removeWorker(Worker w) {
+    public boolean removeWorker(Worker w) {
+        if (!this.workerList.contains(w)) {
+            System.out.println("Cannot remove worker that does not exist");
+            return false;
+        }
         this.workerList.remove(w);
+        return true;
     }
 
     // getter method

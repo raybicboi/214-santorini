@@ -73,7 +73,7 @@ public class Tile {
         if (this.getCurrentLevel() < other.getCurrentLevel()) {
             if (!withinOne(this.getCurrentLevel(), other.getCurrentLevel())) return false;
         }
-        if (other.currentLevel == 4) return false;
+//        if (other.currentLevel == 4) return false;
         return tileBuildCheck(other);
     }
 
@@ -82,6 +82,7 @@ public class Tile {
         if (!withinOne(this.getX(), other.getX())) return false;
         if (!withinOne(this.getY(), other.getY())) return false;
         if (other.getHasWorker()) return false;
+        if (other.currentLevel >= 4) return false;
         return true;
     }
 }
