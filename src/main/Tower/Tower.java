@@ -4,6 +4,8 @@ import main.GameBoard.Tile;
 
 public class Tower {
 
+    // not used in implementation
+
     private int level;
 
     // constructor
