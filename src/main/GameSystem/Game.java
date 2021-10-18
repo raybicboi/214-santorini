@@ -1,62 +1,67 @@
 package main.GameSystem;
 
 import main.GameBoard.Board;
+import main.GameBoard.Tile;
 import main.Player.Player;
+import main.Player.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
 
-    private List<Player> playerList;
-    private Board gameBoard;
+    private Player currentPlayer;
+    private final Board gameBoard;
+    private final Player p0;
+    private final Player p1;
 
     // arg constructor
     /**
-     * Game Constructor
+     * Game Constructor (no arg)
      *
-     * @param gameBoard the board associated with the game
      */
-    public Game(Board gameBoard) {
-        this.playerList = new ArrayList<Player>();
-        this.gameBoard = gameBoard;
+    public Game() {
+        this.p0 = new Player(0);
+        this.p1 = new Player(1);
+        this.gameBoard = new Board();
+        this.currentPlayer = this.getP0();
     }
 
     // setter method
+//    /**
+//     * Adds a new player to the game.
+//     *
+//     * @param p the player to be added to the game
+//     * @return boolean denoting the success or failure of the addition
+//     */
+//    public boolean addPlayer(Player p) {
+//        try {
+//            if (this.playerList.size() == 2) {
+//                System.out.println("Can only have two players in this game");
+//                return false;
+//            }
+//            if (this.playerList.contains(p)) {
+//                System.out.println("Player is already in the game");
+//                return false;
+//            }
+//            this.playerList.add(p);
+//            return true;
+//        } catch (Exception e) {
+//            System.out.println("Cannot add this player to the game.");
+//            return false;
+//        }
+//    }
+
     /**
-     * Adds a new player to the game.
+     * Switches the current player when the turn ends.
      *
-     * @param p the player to be added to the game
-     * @return boolean denoting the success or failure of the addition
      */
-    public boolean addPlayer(Player p) {
-        try {
-            if (this.playerList.size() == 2) {
-                System.out.println("Can only have two players in this game");
-                return false;
-            }
-            if (this.playerList.contains(p)) {
-                System.out.println("Player is already in the game");
-                return false;
-            }
-            this.playerList.add(p);
-            return true;
-        } catch (Exception e) {
-            System.out.println("Cannot add this player to the game.");
-            return false;
-        }
+    public void switchCurrentPlayer() {
+        if (this.currentPlayer == this.p0) { this.currentPlayer = this.p1; }
+        else { this.currentPlayer = this.p0; }
     }
 
     // getter method
-    /**
-     * Getter method for retrieving the player list.
-     *
-     * @return List<Player> the list of players
-     */
-    public List<Player> getPlayerList() {
-        return this.playerList;
-    }
-
     /**
      * Getter method for retrieving the board associated with the game.
      *
@@ -66,31 +71,108 @@ public class Game {
         return this.gameBoard;
     }
 
+    /**
+     * Getter method for retrieving player 0.
+     *
+     * @return Player the player
+     */
+    public Player getP0() { return this.p0; }
+
+    /**
+     * Getter method for retrieving player 1.
+     *
+     * @return Player the player
+     */
+    public Player getP1() { return this.p1; }
+
+    /**
+     * Getter method for retrieving the current player whose turn it is to move.
+     *
+     * @return Player the player
+     */
+    public Player getCurrentPlayer() { return this.currentPlayer; }
+
     // method
+    /**
+     * Builds/Adds a "tower" onto the tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @return boolean of whether the build succeeded
+     */
+    public boolean buildTower(int x, int y) {
+        this.gameBoard.build(x, y);
+        switchCurrentPlayer();
+        return true;
+    }
+
+    /**
+     * Drops a worker onto the game board.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be dropped
+     * @param p the player associated with the worker to be dropped
+     * @return boolean of whether the drop succeeded
+     */
+    public boolean dropWorker(int x, int y, int workerId, Player p) {
+        if (this.gameBoard.initDrop(x, y)) {
+            Tile t = this.gameBoard.getTile(x, y);
+            Worker w;
+            if (p == this.p0) {
+                w = this.p0.getWorker(workerId);
+                p0.changeWorkerTile(w, t);
+            } else {
+                w = this.p1.getWorker(workerId);
+                p1.changeWorkerTile(w, t);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Moves a worker to another tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be moved
+     * @return boolean of whether the move succeeded
+     */
+    public boolean relocateWorker(int x, int y, int workerId) {
+        if (this.gameBoard.relocate(x, y)) {
+            Worker w = this.currentPlayer.getWorker(workerId);
+            Tile t = this.gameBoard.getTile(x, y);
+            currentPlayer.changeWorkerTile(w, t);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
-     * @param p1 the first player in the game
-     * @param p2 the second player in the game
      * @return Player the winning player
      */
-    public Player getWinner(Player p1, Player p2) {
+    public Player getWinner() {
         if (isValidGame()) return null;
-        if (!this.playerList.contains(p1)) return null;
-        if (!this.playerList.contains(p2)) return null;
-        if (p1.isPlayerStuck(this.gameBoard)) {
+//        if (!this.playerList.contains(p1)) return null;
+//        if (!this.playerList.contains(p2)) return null;
+        Player p0 = this.getP0();
+        Player p1 = this.getP1();
+        if (p0.isPlayerStuck(this.gameBoard)) {
+            loser(p0);
+            return p1;
+        } else if (p1.isPlayerStuck(this.gameBoard)) {
             loser(p1);
-            return p2;
-        } else if (p2.isPlayerStuck(this.gameBoard)) {
-            loser(p2);
-            return p1;
+            return p0;
         }
-        if (p1.isWinner()) {
-            winner(p1);
-            return p1;
+        if (p0.isWinner()) {
+            winner(p0);
+            return p0;
         }
-        winner(p2);
-        return p2;
+        winner(p1);
+        return p1;
     }
 
     /**
@@ -99,15 +181,9 @@ public class Game {
      * @return boolean of whether the game is still going
      */
     public boolean isValidGame() {
-        for (Player p : this.playerList) {
-            if (p.isPlayerStuck(this.gameBoard)) {
-                return false;
-            }
-            if (p.isWinner()) {
-                return false;
-            }
-        }
-        return true;
+        Player p0 = this.getP0();
+        Player p1 = this.getP1();
+        return isValidHelp(p0) && isValidHelp(p1);
     }
 
     /**
@@ -116,7 +192,8 @@ public class Game {
      */
     public void resetGameBoard() {
         this.gameBoard.resetBoard();
-        this.playerList.clear();
+        this.p0.clearPlayer();
+        this.p1.clearPlayer();
     }
 
     // helper method
@@ -136,6 +213,21 @@ public class Game {
      */
     private void winner(Player p) {
         System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
+    }
 
+    /**
+     * Private helper that checks if a player is stuck or has won.
+     *
+     * @param p the player to be tested
+     * @return boolean whether the player can make a move
+     */
+    private boolean isValidHelp(Player p) {
+        if (p.isPlayerStuck(this.gameBoard)) {
+            return false;
+        }
+        if (p.isWinner()) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,6 +1,6 @@
-package test.Worker;
+package test.Player;
 
-import main.Worker.Worker;
+import main.Player.Worker;
 import org.junit.Before;
 import org.junit.Test;
 import test.SetupTest;

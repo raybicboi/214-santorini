@@ -1,8 +1,7 @@
 package test.Player;
 
-import junit.framework.TestCase;
 import main.Player.Player;
-import main.Worker.Worker;
+import main.Player.Worker;
 import org.junit.Before;
 import org.junit.Test;
 import test.SetupTest;
