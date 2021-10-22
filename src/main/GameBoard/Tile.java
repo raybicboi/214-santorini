@@ -4,7 +4,7 @@ public class Tile {
 
     private final int x;
     private final int y;
-    int currentLevel; // consider attaching a Tower object instead of current level
+    private int currentLevel; // consider attaching a Tower object instead of current level
     private boolean hasWorker;
 
     // arg constructor
@@ -15,8 +15,6 @@ public class Tile {
      * @param y coordinate of the tile
      */
     public Tile(int x, int y) {
-//        assert x > -1 && x < 5;
-//        assert y > -1 && y < 5;
         this.x = x;
         this.y = y;
         this.currentLevel = 0;

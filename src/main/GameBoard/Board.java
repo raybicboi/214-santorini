@@ -16,10 +16,12 @@ public class Board {
      *
      */
     public Board() {
-        this.tileList = new ArrayList<Tile>(25);
+//        this.tileList = new ArrayList<Tile>(25);
+        this.tileList = new ArrayList<>();
         for (int i = 0; i < 5 ; i++) {
             for (int j = 0; j < 5; j++) {
-                this.tileList.set(i, new Tile(i, j));
+//                this.tileList.set(i, new Tile(i, j));
+                this.tileList.add(new Tile(i, j));
             }
         }
 //        assert this.tileList.size() == 25;
@@ -27,12 +29,14 @@ public class Board {
 
     // setters
     /**
-     * Adds a tile to the game board.
+     * Set the current tile.
      *
-     * @param t the tile to be added to the board
+     * @param x x coordinate of the tile to be set
+     * @param y y coordinate of the tile to be set
      */
-    public void addTile(Tile t) {
-        this.tileList.add(t);
+    public void setCurrentTile(int x, int y) {
+        Tile tile = getTile(x, y);
+        this.currentTile = tile;
     }
 
     /**
@@ -72,6 +76,13 @@ public class Board {
     public Tile getTile(int x, int y) {
         return this.tileList.get(translate(x, y));
     }
+
+    /**
+     * Getter method for retrieving the current tile.
+     *
+     * @return the current tile
+     */
+    public Tile getCurrentTile() { return this.currentTile; }
 
     // methods
 
@@ -127,10 +138,6 @@ public class Board {
      */
     public boolean initDrop(int x, int y) {
         Tile t = getTile(x, y);
-        if (this.currentTile != null) {
-            System.out.println("Worker is already on another tile");
-            return false;
-        }
         // make sure there are no buildings, no other players in that spot
         if (t.getHasWorker()) {
             System.out.println("This tile already has another worker");
@@ -208,5 +215,5 @@ public class Board {
         return true;
     }
 
-    private int translate(int x, int y) { return y * 5 + x; }
+    private int translate(int x, int y) { return x * 5 + y; }
 }

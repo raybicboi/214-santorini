@@ -7,7 +7,6 @@ import org.junit.Test;
 import test.SetupTest;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.TestCase.*;
 
@@ -22,42 +21,37 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetters() {
-        Tile sample = new Tile(6, 6);
-        st.board.addTile(sample);
-        assertEquals(st.board.getTileList().size(), 26);
-    }
-
-    @Test
     public void testGetters() {
-        assertNotSame(st.board.getTileList(), new ArrayList<Tile>());
-        assertEquals(st.board.getTileList().size(), 25);
+        assertNotSame(st.game.getGameBoard().getTileList(), new ArrayList<Tile>());
+        assertEquals(st.game.getGameBoard().getTileList().size(), 25);
     }
 
     @Test
     public void testResetBoard() {
-        st.t01.build();
-        st.t01.build();
-        st.t02.build();
-        st.w22.relocate(st.t33);
+        st.game.buildTower(0, 1);
+        st.game.buildTower(0, 1);
+        st.game.buildTower(0, 2);
+        st.game.switchCurrentPlayer(); // sets current player to p1
+        st.game.relocateWorker(3, 3, 1);
 
-        assert(st.t01.getCurrentLevel() == 2);
-        assert(st.t02.getCurrentLevel() == 1);
-        assert(st.t03.getCurrentLevel() == 0);
-        assertTrue(st.t33.getHasWorker());
-        assertEquals(st.board.getTileList().size(), 25);
+        assert(st.game.getGameBoard().getTile(0, 1).getCurrentLevel() == 2);
+        assert(st.game.getGameBoard().getTile(0, 2).getCurrentLevel() == 1);
+        assert(st.game.getGameBoard().getTile(0, 3).getCurrentLevel() == 0);
+        assertTrue(st.game.getGameBoard().getTile(3, 3).getHasWorker());
+        assertEquals(st.game.getGameBoard().getTileList().size(), 25);
 
-        st.board.resetBoard();
-        assert(st.t01.getCurrentLevel() == 0);
-        assert(st.t02.getCurrentLevel() == 0);
-        assert(st.t03.getCurrentLevel() == 0);
-        assertFalse(st.t33.getHasWorker());
-        assertFalse(st.t01.getHasWorker());
+        st.game.getGameBoard().resetBoard();
+        assert(st.game.getGameBoard().getTile(0, 1).getCurrentLevel() == 0);
+        assert(st.game.getGameBoard().getTile(0, 2).getCurrentLevel() == 0);
+        assert(st.game.getGameBoard().getTile(0, 3).getCurrentLevel() == 0);
+        assertFalse(st.game.getGameBoard().getTile(3, 3).getHasWorker());
+        assertFalse(st.game.getGameBoard().getTile(0, 1).getHasWorker());
     }
 
     @Test
     public void testConstructor() {
         Board test = new Board();
-        assertEquals(test.getTileList(), new ArrayList<Tile>());
+        assertNotSame(test.getTileList(), new ArrayList<Tile>());
+        assertEquals(test.getTileList().size(), 25);
     }
 }

@@ -19,47 +19,16 @@ public class Player {
      */
     public Player(int playerId) {
         this.playerId = playerId;
-        this.workerList = new ArrayList<>(2);
+//        this.workerList = new ArrayList<>(2);
+        this.workerList = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            this.workerList.set(i, new Worker(i));
+//            this.workerList.set(i, new Worker(i));
+            this.workerList.add(new Worker(i));
         }
     }
 
     // setter method
-//    /**
-//     * Adds a new worker to belong to the player.
-//     *
-//     * @param w the worker to be added
-//     * @return boolean of whether the worker has been successfully added
-//     */
-//    public boolean addNewWorker(Worker w) {
-//        if (this.workerList.size() >= 2) {
-//            System.out.println("This player already has two workers");
-//            return false;
-//        }
-//        if (this.workerList.contains(w)) {
-//            System.out.println("This player already has this worker");
-//            return false;
-//        }
-//        this.workerList.add(w);
-//        return true;
-//    }
-
-//    /**
-//     * Removes a worker so that it no longer belongs to this player.
-//     *
-//     * @param w worker to be removed
-//     * @return boolean of whether the remove was successful
-//     */
-//    public boolean removeWorker(Worker w) {
-//        if (!this.workerList.contains(w)) {
-//            System.out.println("Cannot remove worker that does not exist");
-//            return false;
-//        }
-//        this.workerList.remove(w);
-//        return true;
-//    }
-
+    
     // getter method
     /**
      * Getter method that returns the list of workers associated with the player.
@@ -77,8 +46,7 @@ public class Player {
      * @return Worker the worker requested
      */
     public Worker getWorker(int i) {
-        Worker w = this.workerList.get(i);
-        return w;
+        return this.workerList.get(i);
     }
 
     /**
@@ -134,5 +102,17 @@ public class Player {
         for (Worker w : this.getWorkerList()) {
             w.setCurrentTile();
         }
+    }
+
+    /**
+     * Helper method that finds if a worker is currently on a tile.
+     *
+     * @param id id of the worker
+     * @return boolean whether the worker is currently on a tile
+     */
+    public boolean checkWorkerNull(int id) {
+        Worker w = getWorker(id);
+        if (w.getCurrentTile() == null) { return true; }
+        return false;
     }
 }

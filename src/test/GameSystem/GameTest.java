@@ -1,15 +1,11 @@
 package test.GameSystem;
 
-import junit.framework.TestCase;
 import main.GameBoard.Board;
 import main.GameSystem.Game;
 import main.Player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import test.SetupTest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertTrue;
@@ -25,107 +21,85 @@ public class GameTest {
     }
 
     @Test
-    public void testAddPlayer() {
-        Player p3 = new Player();
-        Player p4 = new Player();
-        assertFalse(st.game.addPlayer(p3)); // cannot add more than two players
-
-        Game newGame = new Game(st.board);
-        assertTrue(newGame.addPlayer(p3));
-        assertFalse(newGame.addPlayer(p3)); // cannot add same player twice
-        assertTrue(newGame.addPlayer(p4));
-    }
-
-    @Test
     public void testGetters() {
-        assertEquals(st.game.getGameBoard(), st.board);
-
-        List<Player> test = new ArrayList<Player>();
-        test.add(st.p1);
-        test.add(st.p2);
-        assertEquals(st.game.getPlayerList(), test);
-
+        assertEquals(st.game.getCurrentPlayer(), st.game.getP0());
+        st.game.switchCurrentPlayer();
+        assertEquals(st.game.getCurrentPlayer(), st.game.getP1());
     }
 
     @Test
     public void testIsValidGame() {
         // tested both is player stuck and is winner already
-        st.t01.build();
-        st.t01.build();
-        st.t11.build();
-        st.t11.build();
-        st.t10.build();
-        st.t10.build();
-        st.t02.build();
-        st.t02.build();
-        st.t03.build();
-        st.t03.build();
-        st.t04.build();
-        st.t04.build();
-        st.t14.build();
-        st.t14.build();
-        st.t24.build();
-        st.t24.build();
-        st.t23.build();
-        st.t23.build();
-        st.t22.build();
-        st.t22.build();
-        st.t12.build();
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.getGameBoard().getTile(1, 1).build();
+        st.game.getGameBoard().getTile(1, 1).build();
+        st.game.getGameBoard().getTile(1, 0).build();
+        st.game.getGameBoard().getTile(1, 0).build();
+        st.game.getGameBoard().getTile(0, 2).build();
+        st.game.getGameBoard().getTile(0, 2).build();
+        st.game.getGameBoard().getTile(0, 3).build();
+        st.game.getGameBoard().getTile(0, 3).build();
+        st.game.getGameBoard().getTile(0, 4).build();
+        st.game.getGameBoard().getTile(0, 4).build();
+        st.game.getGameBoard().getTile(1, 4).build();
+        st.game.getGameBoard().getTile(1, 4).build();
+        st.game.getGameBoard().getTile(2, 4).build();
+        st.game.getGameBoard().getTile(2, 4).build();
+        st.game.getGameBoard().getTile(2, 3).build();
+        st.game.getGameBoard().getTile(2, 3).build();
+        st.game.getGameBoard().getTile(2, 2).build();
+        st.game.getGameBoard().getTile(2, 2).build();
+        st.game.getGameBoard().getTile(1, 2).build();
         assertTrue(st.game.isValidGame());
-        assertEquals(st.game.getWinner(st.p1, st.p2), null);
-        st.t12.build();
+        assertNull(st.game.getWinner());
+        st.game.getGameBoard().getTile(1, 2).build();
         assertFalse(st.game.isValidGame());
-        assertEquals(st.game.getWinner(st.p1, st.p2), st.p2);
+        assertEquals(st.game.getWinner(), st.game.getP1());
     }
 
     @Test
     public void isValidGame2() {
-        st.w11.relocate(st.t01);
-        st.w11.build(st.t00);
-        st.w11.relocate(st.t00); // reached first level
-        st.w11.build(st.t01);
-        st.w11.build(st.t01);
-        st.w11.relocate(st.t01); // reached second level
-        st.w11.build(st.t00);
-        st.w11.build(st.t00);
+        st.game.relocateWorker(0, 1, 0); // current player 1, so no switch current player needed
+        st.game.getGameBoard().getTile(0, 0).build();
+        st.game.relocateWorker(0, 0, 0); // reached first level
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.relocateWorker(0, 1, 0); // reached second level
+        st.game.getGameBoard().getTile(0, 0).build();
+        st.game.getGameBoard().getTile(0, 0).build();
         assertTrue(st.game.isValidGame());
-        assertEquals(st.game.getWinner(st.p1, st.p2), null);
-        st.w11.relocate(st.t00); // reached third level
+        assertNull(st.game.getWinner());
+        st.game.relocateWorker(0, 0, 0); // reached third level
         assertFalse(st.game.isValidGame());
-        assertEquals(st.game.getWinner(st.p1, st.p2), st.p1);
-    }
-
-    @Test
-    public void testGetWinner() {
-        // integration test done in valid game
-        // just testing preconditions here
-        Player p3 = new Player();
-        assertEquals(st.game.getWinner(st.p1, p3), null); // p3 is not in the game
+        assertEquals(st.game.getWinner(), st.game.getP0());
     }
 
     @Test
     public void testResetGameBoard() {
         // board reset method already tested (just a setter method)
-        st.t01.build();
-        st.t01.build();
-        st.t02.build();
-        st.w22.relocate(st.t33);
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.getGameBoard().getTile(0, 2).build();
+        st.game.switchCurrentPlayer(); // switch to player 1
+        st.game.relocateWorker(3, 3, 1);
 
         st.game.resetGameBoard();
-        assert(st.t01.getCurrentLevel() == 0);
-        assert(st.t02.getCurrentLevel() == 0);
-        assert(st.t03.getCurrentLevel() == 0);
-        assertFalse(st.t33.getHasWorker());
-        assertFalse(st.t01.getHasWorker());
+        assert(st.game.getGameBoard().getTile(0, 1).getCurrentLevel() == 0);
+        assert(st.game.getGameBoard().getTile(0, 2).getCurrentLevel() == 0);
+        assert(st.game.getGameBoard().getTile(0, 3).getCurrentLevel() == 0);
+        assertFalse(st.game.getGameBoard().getTile(3, 3).getHasWorker());
+        assertFalse(st.game.getGameBoard().getTile(0, 1).getHasWorker());
 
-        assertEquals(st.game.getPlayerList(), new ArrayList<Player>());
+//        assertEquals(st.game.getPlayerList(), new ArrayList<Player>());
     }
 
     @Test
     public void testGameConstructor() {
-        Board newBoard = new Board();
-        Game newGame = new Game(newBoard);
-        assertEquals(newGame.getGameBoard(), newBoard);
-        assertEquals(newGame.getPlayerList(), new ArrayList<Player>());
+        Game newGame = new Game();
+        assertEquals(newGame.getGameBoard(), new Board());
+        assertEquals(newGame.getP0(), new Player(0));
+        assertEquals(newGame.getP1(), new Player(1));
+        assertEquals(newGame.getCurrentPlayer(), newGame.getP0());
     }
 }

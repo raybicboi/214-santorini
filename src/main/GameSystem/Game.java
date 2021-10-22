@@ -5,9 +5,6 @@ import main.GameBoard.Tile;
 import main.Player.Player;
 import main.Player.Worker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Game {
 
     private Player currentPlayer;
@@ -28,30 +25,6 @@ public class Game {
     }
 
     // setter method
-//    /**
-//     * Adds a new player to the game.
-//     *
-//     * @param p the player to be added to the game
-//     * @return boolean denoting the success or failure of the addition
-//     */
-//    public boolean addPlayer(Player p) {
-//        try {
-//            if (this.playerList.size() == 2) {
-//                System.out.println("Can only have two players in this game");
-//                return false;
-//            }
-//            if (this.playerList.contains(p)) {
-//                System.out.println("Player is already in the game");
-//                return false;
-//            }
-//            this.playerList.add(p);
-//            return true;
-//        } catch (Exception e) {
-//            System.out.println("Cannot add this player to the game.");
-//            return false;
-//        }
-//    }
-
     /**
      * Switches the current player when the turn ends.
      *
@@ -101,9 +74,11 @@ public class Game {
      * @return boolean of whether the build succeeded
      */
     public boolean buildTower(int x, int y) {
-        this.gameBoard.build(x, y);
-        switchCurrentPlayer();
-        return true;
+        if(this.gameBoard.build(x, y)) {
+            switchCurrentPlayer();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -116,13 +91,17 @@ public class Game {
      * @return boolean of whether the drop succeeded
      */
     public boolean dropWorker(int x, int y, int workerId, Player p) {
+        if (!p.checkWorkerNull(workerId)) {
+            System.out.println("Worker is already on another tile");
+            return false;
+        }
         if (this.gameBoard.initDrop(x, y)) {
             Tile t = this.gameBoard.getTile(x, y);
             Worker w;
             if (p == this.p0) {
                 w = this.p0.getWorker(workerId);
                 p0.changeWorkerTile(w, t);
-            } else {
+            } else if (p == this.p1) {
                 w = this.p1.getWorker(workerId);
                 p1.changeWorkerTile(w, t);
             }
@@ -156,8 +135,6 @@ public class Game {
      */
     public Player getWinner() {
         if (isValidGame()) return null;
-//        if (!this.playerList.contains(p1)) return null;
-//        if (!this.playerList.contains(p2)) return null;
         Player p0 = this.getP0();
         Player p1 = this.getP1();
         if (p0.isPlayerStuck(this.gameBoard)) {
@@ -225,9 +202,6 @@ public class Game {
         if (p.isPlayerStuck(this.gameBoard)) {
             return false;
         }
-        if (p.isWinner()) {
-            return false;
-        }
-        return true;
+        return !p.isWinner();
     }
 }
