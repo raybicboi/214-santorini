@@ -1,6 +1,6 @@
 package main.GameBoard;
 
-import main.Player.Worker;
+import main.Player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.List;
 public class Board {
 
     private final List<Tile> tileList;
-    public Tile currentTile;
 
     // constructor
     /**
@@ -16,27 +15,12 @@ public class Board {
      *
      */
     public Board() {
-//        this.tileList = new ArrayList<Tile>(25);
         this.tileList = new ArrayList<>();
         for (int i = 0; i < 5 ; i++) {
             for (int j = 0; j < 5; j++) {
-//                this.tileList.set(i, new Tile(i, j));
                 this.tileList.add(new Tile(i, j));
             }
         }
-//        assert this.tileList.size() == 25;
-    }
-
-    // setters
-    /**
-     * Set the current tile.
-     *
-     * @param x x coordinate of the tile to be set
-     * @param y y coordinate of the tile to be set
-     */
-    public void setCurrentTile(int x, int y) {
-        Tile tile = getTile(x, y);
-        this.currentTile = tile;
     }
 
     /**
@@ -44,11 +28,13 @@ public class Board {
      *
      * @param x the x coordinate of the chosen tile
      * @param y the y coordinate of the chosen tile
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether the build succeeded
      */
-    public boolean build(int x, int y) {
+    public boolean build(int x, int y, int id, Player p) {
         Tile t = getTile(x, y);
-        if (!this.isLegalBuildTile(t)) {
+        if (!this.isLegalBuildTile(t, id, p)) {
             System.out.println("Cannot build on this tile!");
             return false;
         }
@@ -77,23 +63,19 @@ public class Board {
         return this.tileList.get(translate(x, y));
     }
 
-    /**
-     * Getter method for retrieving the current tile.
-     *
-     * @return the current tile
-     */
-    public Tile getCurrentTile() { return this.currentTile; }
-
     // methods
 
     /**
      * Sees if a worker can move from their current tile to a select tile.
      *
      * @param other - the other tile to be tested
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal move
      */
-    public boolean isLegalMoveTile(Tile other) {
-        if (this.currentTile != null) { return this.tileCheck(other); }
+    public boolean isLegalMoveTile(Tile other, int id, Player p) {
+        Tile t = p.findCurrentTile(id);
+        if (t != null) { return this.tileCheck(other, id, p); }
         return false;
     }
 
@@ -101,10 +83,13 @@ public class Board {
      * Sees if a worker can build on a select tile from its current location.
      *
      * @param other - the other tile to be tested
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal build
      */
-    public boolean isLegalBuildTile(Tile other) {
-        if (this.currentTile != null) { return this.tileBuildCheck(other); }
+    public boolean isLegalBuildTile(Tile other, int id, Player p) {
+        Tile t = p.findCurrentTile(id);
+        if (t != null) { return this.tileBuildCheck(other, id, p); }
         return false;
     }
 
@@ -112,10 +97,13 @@ public class Board {
      * Sees if a worker can perform either move or build operation on a select tile.
      *
      * @param other - the other tile to be tested
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal move or build
      */
-    public boolean isValidTile(Tile other) {
-        if (this.currentTile != null) {return (this.isLegalBuildTile(other) && this.isLegalMoveTile(other));}
+    public boolean isValidTile(Tile other, int id, Player p) {
+        Tile t = p.findCurrentTile(id);
+        if (t != null) {return (this.isLegalBuildTile(other, id, p) && this.isLegalMoveTile(other, id, p));}
         return false;
     }
 
@@ -149,7 +137,6 @@ public class Board {
                 return false;
             }
         }
-        this.currentTile = t;
         t.jumped();
         return true;
     }
@@ -159,17 +146,19 @@ public class Board {
      *
      * @param x the x coordinate of the test tile
      * @param y the y coordinate of the test tile
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether the worker has successfully moved
      */
-    public boolean relocate(int x, int y) {
+    public boolean relocate(int x, int y, int id, Player p) {
         Tile t = getTile(x, y);
-        if (!this.isLegalMoveTile(t)) {
+        if (!this.isLegalMoveTile(t, id, p)) {
             System.out.println("Cannot move to this tile!");
             return false;
         }
-        this.currentTile.jumped();
+        Tile old = p.findCurrentTile(id);
+        old.jumped();
         t.jumped();
-        this.currentTile = t;
         return true;
     }
 
@@ -189,31 +178,44 @@ public class Board {
      * Private helper method that tests if another tile can be relocated to.
      *
      * @param other - the other tile to be tested
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal move
      */
-    private boolean tileCheck(Tile other) {
-        if (this.currentTile.getCurrentLevel() < other.getCurrentLevel()) {
-            if (!withinOne(this.currentTile.getCurrentLevel(), other.getCurrentLevel())) return false;
+    private boolean tileCheck(Tile other, int id, Player p) {
+        Tile t = p.findCurrentTile(id);
+        if (t.getCurrentLevel() < other.getCurrentLevel()) {
+            if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;
         }
 //        if (other.currentLevel == 4) return false;
-        return tileBuildCheck(other);
+        return tileBuildCheck(other, id, p);
     }
 
     /**
      * Private helper method that tests if another tile can be built on.
      *
      * @param other - the other tile to be tested
+     * @param id the id of the player
+     * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal move
      */
-    private boolean tileBuildCheck(Tile other) {
-        if (this.currentTile.getX() == other.getX() &&
-                this.currentTile.getY() == other.getY()) return false;
-        if (!withinOne(this.currentTile.getX(), other.getX())) return false;
-        if (!withinOne(this.currentTile.getY(), other.getY())) return false;
+    private boolean tileBuildCheck(Tile other, int id, Player p) {
+        Tile t = p.findCurrentTile(id);
+        if (t.getX() == other.getX() &&
+                t.getY() == other.getY()) return false;
+        if (!withinOne(t.getX(), other.getX())) return false;
+        if (!withinOne(t.getY(), other.getY())) return false;
         if (other.getHasWorker()) return false;
-        if (other.getCurrentLevel() >= 4) return false;
-        return true;
+        return other.getCurrentLevel() < 4;
     }
 
+    /**
+     * Private helper method that gets the tile from the tile list.
+     *
+     * @param x the x value in the array
+     * @param y the y value in the array
+     * @return int- the index position of that tile in the tile array
+     */
     private int translate(int x, int y) { return x * 5 + y; }
+
 }

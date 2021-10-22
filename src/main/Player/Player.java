@@ -19,10 +19,8 @@ public class Player {
      */
     public Player(int playerId) {
         this.playerId = playerId;
-//        this.workerList = new ArrayList<>(2);
         this.workerList = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-//            this.workerList.set(i, new Worker(i));
             this.workerList.add(new Worker(i));
         }
     }
@@ -77,7 +75,7 @@ public class Player {
      */
     public boolean isPlayerStuck(Board b) {
         for (Worker w : this.getWorkerList()) {
-            if (!w.isStuck(b)) return false;
+            if (!isStuck(b, w.getWorkerId())) return false;
         }
         return true;
     }
@@ -112,7 +110,31 @@ public class Player {
      */
     public boolean checkWorkerNull(int id) {
         Worker w = getWorker(id);
-        if (w.getCurrentTile() == null) { return true; }
-        return false;
+        return w.getCurrentTile() == null;
+    }
+
+    /**
+     * Private helper method that finds the current tile of a worker.
+     *
+     * @param id the id of the player
+     * @return Tile the current tile
+     */
+    public Tile findCurrentTile(int id) {
+        Worker w = this.getWorker(id);
+        return w.getCurrentTile();
+    }
+
+    /**
+     * Helper function that determines if the worker cannot move to another space.
+     *
+     * @param b board representing the game
+     * @param id the id of the worker
+     * @return boolean of whether the worker can move
+     */
+    public boolean isStuck(Board b, int id) {
+        for (Tile t : b.getTileList()) {
+            if (b.isValidTile(t, id, this)) return false;
+        }
+        return true;
     }
 }

@@ -25,21 +25,19 @@ public class Tile {
     /**
      * Builds/Adds a "tower" onto the tile.
      *
-     * @return boolean of whether the build succeeded
      */
-    public boolean build() {
+    public void build() {
         this.currentLevel += 1;
-        return true;
+//        return true;
     }
 
     /**
      * Toggles the has worker flag.
      *
-     * @return boolean of whether the flag has been changed
      */
-    public boolean jumped() {
+    public void jumped() {
         this.hasWorker = !this.hasWorker;
-        return true;
+//        return true;
     }
 
     // getter methods

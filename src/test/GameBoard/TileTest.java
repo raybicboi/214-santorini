@@ -53,84 +53,11 @@ public class TileTest {
 
     }
 
-    @Test // more extensive than is legal build tile
-    public void testIsLegalMoveTile() {
-        st.game.getGameBoard().setCurrentTile(0, 1);
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(1, 2)));
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(1, 0)));
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(0, 2)));
-        assertFalse(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(3, 3))); // not adjacent
-        assertFalse(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(0, 1))); // own tile
-        st.game.getGameBoard().setCurrentTile(1, 2);
-        assertFalse(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(1, 3))); // already has another worker
-
-        st.game.getGameBoard().setCurrentTile(4, 1);
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(4, 2)));
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        assertFalse(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(4, 2))); // tower already domed
-
-        st.game.getGameBoard().getTile(4, 1).build();
-        st.game.getGameBoard().getTile(4, 1).build();
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(3, 1))); // can go down two levels
-        st.game.getGameBoard().setCurrentTile(3, 1);
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(4, 1))); // cannot go up two levels
-
-        st.game.getGameBoard().getTile(3, 0).build();
-        assertTrue(st.game.getGameBoard().isLegalMoveTile(st.game.getGameBoard().getTile(3, 0))); // can go up a single level
-    }
-
     @Test
-    public void testIsLegalBuildTile() {
-
-        st.game.getGameBoard().setCurrentTile(0, 1);
-        assertTrue(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(1, 2)));
-        assertTrue(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(1, 0)));
-        assertTrue(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(0, 2)));
-        assertFalse(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(3, 3))); // not adjacent
-        assertFalse(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(0, 1))); // own tile
-        st.game.getGameBoard().setCurrentTile(1, 2);
-        assertFalse(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(1, 3))); // already has a worker
-
-        st.game.getGameBoard().setCurrentTile(4, 1);
-        assertTrue(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(4, 2)));
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        assertTrue(st.game.getGameBoard().isLegalBuildTile(st.game.getGameBoard().getTile(4, 2))); // tower is already domed
-    }
-
-    // for use case/naming convention purposes, isValidTile is a separate method
-    @Test // legal move tile assertions suffice, so I will repeat the same tests
-    public void testIsValidTile() {
-        st.game.getGameBoard().setCurrentTile(0, 1);
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(1, 2)));
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(1, 0)));
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(0, 2)));
-        assertFalse(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(3, 3))); // not adjacent
-        assertFalse(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(0, 1))); // own tile
-        st.game.getGameBoard().setCurrentTile(1, 2);
-        assertFalse(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(1, 3))); // already has another worker
-
-        st.game.getGameBoard().setCurrentTile(4, 1);
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(4, 2)));
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        st.game.getGameBoard().getTile(4, 2).build();
-        assertFalse(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(4, 2))); // tower already domed
-
-        st.game.getGameBoard().getTile(4, 1).build();
-        st.game.getGameBoard().getTile(4, 1).build();
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(3, 1))); // can go down two levels
-        st.game.getGameBoard().setCurrentTile(3, 1);
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(4, 1))); // cannot go up two levels
-
-        st.game.getGameBoard().getTile(3, 0).build();
-        assertTrue(st.game.getGameBoard().isValidTile(st.game.getGameBoard().getTile(3, 0))); // can go up a single level
+    public void testJumped() {
+        assertFalse(st.game.getGameBoard().getTile(0, 4).getHasWorker());
+        st.game.getGameBoard().getTile(0, 4).jumped();
+        assertTrue(st.game.getGameBoard().getTile(0, 4).getHasWorker());
     }
 
     @Test
@@ -153,6 +80,19 @@ public class TileTest {
         st.game.getGameBoard().getTile(4, 3).resetTile();
         assertEquals(st.game.getGameBoard().getTile(4, 2).getCurrentLevel(), 0);
         assertEquals(st.game.getGameBoard().getTile(4, 3).getCurrentLevel(), 0);
+    }
+
+    @Test
+    public void testBuild() {
+        // legal build tile already tested, so I don't need to unit test this
+        assertEquals(st.game.getGameBoard().getTile(3, 3).getCurrentLevel(), 0);
+        assertFalse(st.game.buildTower(3, 3, 1));
+        assertEquals(st.game.getGameBoard().getTile(3, 3).getCurrentLevel(), 0);
+
+        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 0);
+        assertTrue(st.game.buildTower(0, 1, 0));
+        st.game.switchCurrentPlayer();
+        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 1);
     }
 
     @Test

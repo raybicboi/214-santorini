@@ -1,6 +1,5 @@
 package main.Player;
 
-import main.GameBoard.Board;
 import main.GameBoard.Tile;
 
 public class Worker {
@@ -55,19 +54,6 @@ public class Worker {
     }
 
     // helper methods
-    /**
-     * Helper function that determines if the worker cannot move to another space.
-     *
-     * @param b board representing the game
-     * @return boolean of whether the worker can move
-     */
-    public boolean isStuck(Board b) {
-        for (Tile t : b.getTileList()) {
-            if (b.isValidTile(t)) return false;
-        }
-        return true;
-    }
-
     /**
      * Helper function that determines if the worker reached a level 3 tower.
      *

@@ -71,10 +71,11 @@ public class Game {
      *
      * @param x the x coordinate of the chosen tile
      * @param y the y coordinate of the chosen tile
+     * @param id the id of the player
      * @return boolean of whether the build succeeded
      */
-    public boolean buildTower(int x, int y) {
-        if(this.gameBoard.build(x, y)) {
+    public boolean buildTower(int x, int y, int id) {
+        if(this.gameBoard.build(x, y, id, currentPlayer)) {
             switchCurrentPlayer();
             return true;
         }
@@ -119,7 +120,7 @@ public class Game {
      * @return boolean of whether the move succeeded
      */
     public boolean relocateWorker(int x, int y, int workerId) {
-        if (this.gameBoard.relocate(x, y)) {
+        if (this.gameBoard.relocate(x, y, workerId, currentPlayer)) {
             Worker w = this.currentPlayer.getWorker(workerId);
             Tile t = this.gameBoard.getTile(x, y);
             currentPlayer.changeWorkerTile(w, t);
