@@ -2,10 +2,11 @@ package main.GameSystem;
 
 import main.GameBoard.Board;
 import main.GameBoard.Tile;
+import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
-public class Game {
+public class Game implements CardLogic {
 
     private Player currentPlayer;
     private final Board gameBoard;
@@ -74,6 +75,7 @@ public class Game {
      * @param id the id of the player
      * @return boolean of whether the build succeeded
      */
+    @Override
     public boolean buildTower(int x, int y, int id) {
         if(this.gameBoard.build(x, y, id, currentPlayer)) {
             switchCurrentPlayer();
@@ -119,6 +121,7 @@ public class Game {
      * @param workerId id of the worker to be moved
      * @return boolean of whether the move succeeded
      */
+    @Override
     public boolean relocateWorker(int x, int y, int workerId) {
         if (this.gameBoard.relocate(x, y, workerId, currentPlayer)) {
             Worker w = this.currentPlayer.getWorker(workerId);
@@ -134,6 +137,7 @@ public class Game {
      *
      * @return Player the winning player
      */
+    @Override
     public Player getWinner() {
         if (isValidGame()) return null;
         Player p0 = this.getP0();
