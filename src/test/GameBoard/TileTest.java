@@ -18,25 +18,25 @@ public class TileTest {
         st.setUp();
     }
 
-    @Test
-    public void testGetters() {
-        assertEquals(st.game.getGameBoard().getTile(0, 1).getX(), 0);
-        assertEquals(st.game.getGameBoard().getTile(0, 1).getY(), 1);
-        assertNotEquals(st.game.getGameBoard().getTile(0, 1).getX(), 3);
-        assertNotEquals(st.game.getGameBoard().getTile(0, 1).getY(), 4);
-
-        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 0);
-        st.game.getGameBoard().getTile(0, 1).build();
-        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 1);
-
-        assertFalse(st.game.getGameBoard().getTile(2, 3).getHasWorker());
-        assertTrue(st.game.getGameBoard().getTile(3, 2).getHasWorker());
-
-        st.game.switchCurrentPlayer(); // switch to player 1
-        st.game.relocateWorker(2, 3, 1);
-        assertTrue(st.game.getGameBoard().getTile(2, 3).getHasWorker());
-        assertFalse(st.game.getGameBoard().getTile(3, 2).getHasWorker());
-    }
+//    @Test
+//    public void testGetters() {
+//        assertEquals(st.game.getGameBoard().getTile(0, 1).getX(), 0);
+//        assertEquals(st.game.getGameBoard().getTile(0, 1).getY(), 1);
+//        assertNotEquals(st.game.getGameBoard().getTile(0, 1).getX(), 3);
+//        assertNotEquals(st.game.getGameBoard().getTile(0, 1).getY(), 4);
+//
+//        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 0);
+//        st.game.getGameBoard().getTile(0, 1).build();
+//        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 1);
+//
+//        assertFalse(st.game.getGameBoard().getTile(2, 3).getHasWorker());
+//        assertTrue(st.game.getGameBoard().getTile(3, 2).getHasWorker());
+//
+//        st.game.switchCurrentPlayer(); // switch to player 1
+//        st.game.relocateWorker(2, 3, 1);
+//        assertTrue(st.game.getGameBoard().getTile(2, 3).getHasWorker());
+//        assertFalse(st.game.getGameBoard().getTile(3, 2).getHasWorker());
+//    }
 
     @Test
     public void testSetters() {
@@ -82,18 +82,18 @@ public class TileTest {
         assertEquals(st.game.getGameBoard().getTile(4, 3).getCurrentLevel(), 0);
     }
 
-    @Test
-    public void testBuild() {
-        // legal build tile already tested, so I don't need to unit test this
-        assertEquals(st.game.getGameBoard().getTile(3, 3).getCurrentLevel(), 0);
-        assertFalse(st.game.buildTower(3, 3, 1));
-        assertEquals(st.game.getGameBoard().getTile(3, 3).getCurrentLevel(), 0);
-
-        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 0);
-        assertTrue(st.game.buildTower(0, 1, 0));
-        st.game.switchCurrentPlayer();
-        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 1);
-    }
+//    @Test
+//    public void testBuild() {
+//        // legal build tile already tested, so I don't need to unit test this
+//        assertEquals(st.game.getGameBoard().getTile(3, 3).getCurrentLevel(), 0);
+//        assertFalse(st.game.buildTower(3, 3, 1));
+//        assertEquals(st.game.getGameBoard().getTile(3, 3).getCurrentLevel(), 0);
+//
+//        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 0);
+//        assertTrue(st.game.buildTower(0, 1, 0));
+//        st.game.switchCurrentPlayer();
+//        assertEquals(st.game.getGameBoard().getTile(0, 1).getCurrentLevel(), 1);
+//    }
 
     @Test
     public void testTileConstructor() {

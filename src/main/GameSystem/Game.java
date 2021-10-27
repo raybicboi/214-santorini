@@ -6,7 +6,7 @@ import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
-public class Game implements CardLogic {
+public class Game {
 
     private Player currentPlayer;
     private final Board gameBoard;
@@ -66,24 +66,6 @@ public class Game implements CardLogic {
      */
     public Player getCurrentPlayer() { return this.currentPlayer; }
 
-    // method
-    /**
-     * Builds/Adds a "tower" onto the tile.
-     *
-     * @param x the x coordinate of the chosen tile
-     * @param y the y coordinate of the chosen tile
-     * @param id the id of the player
-     * @return boolean of whether the build succeeded
-     */
-    @Override
-    public boolean buildTower(int x, int y, int id) {
-        if(this.gameBoard.build(x, y, id, currentPlayer)) {
-            switchCurrentPlayer();
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Drops a worker onto the game board.
      *
@@ -114,58 +96,14 @@ public class Game implements CardLogic {
     }
 
     /**
-     * Moves a worker to another tile.
+     * Getter method for retrieving a single tile from the current Game.
      *
-     * @param x the x coordinate of the chosen tile
-     * @param y the y coordinate of the chosen tile
-     * @param workerId id of the worker to be moved
-     * @return boolean of whether the move succeeded
+     * @param x the x coordinate of the tile to be retrieved
+     * @param y the y coordinate of the tile to be retrieved
+     * @return the tile found based on the coordinates given
      */
-    @Override
-    public boolean relocateWorker(int x, int y, int workerId) {
-        if (this.gameBoard.relocate(x, y, workerId, currentPlayer)) {
-            Worker w = this.currentPlayer.getWorker(workerId);
-            Tile t = this.gameBoard.getTile(x, y);
-            currentPlayer.changeWorkerTile(w, t);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * At any given point in the game, determines the winner- or returns null if there is no winner.
-     *
-     * @return Player the winning player
-     */
-    @Override
-    public Player getWinner() {
-        if (isValidGame()) return null;
-        Player p0 = this.getP0();
-        Player p1 = this.getP1();
-        if (p0.isPlayerStuck(this.gameBoard)) {
-            loser(p0);
-            return p1;
-        } else if (p1.isPlayerStuck(this.gameBoard)) {
-            loser(p1);
-            return p0;
-        }
-        if (p0.isWinner()) {
-            winner(p0);
-            return p0;
-        }
-        winner(p1);
-        return p1;
-    }
-
-    /**
-     * Checks if the game state is valid.
-     *
-     * @return boolean of whether the game is still going
-     */
-    public boolean isValidGame() {
-        Player p0 = this.getP0();
-        Player p1 = this.getP1();
-        return isValidHelp(p0) && isValidHelp(p1);
+    public Tile retrieveTile(int x, int y) {
+        return this.getGameBoard().getTile(x, y);
     }
 
     /**
@@ -179,34 +117,5 @@ public class Game implements CardLogic {
     }
 
     // helper method
-    /**
-     * Private helper that prints a message for the losing player.
-     *
-     * @param p the player who lost
-     */
-    private void loser(Player p) {
-        System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
-    }
 
-    /**
-     * Private helper that prints a message for the winning player.
-     *
-     * @param p the player who won
-     */
-    private void winner(Player p) {
-        System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
-    }
-
-    /**
-     * Private helper that checks if a player is stuck or has won.
-     *
-     * @param p the player to be tested
-     * @return boolean whether the player can make a move
-     */
-    private boolean isValidHelp(Player p) {
-        if (p.isPlayerStuck(this.gameBoard)) {
-            return false;
-        }
-        return !p.isWinner();
-    }
 }
