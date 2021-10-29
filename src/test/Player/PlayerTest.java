@@ -49,35 +49,35 @@ public class PlayerTest {
         assertEquals(st.game.getP0().getWorker(0).getCurrentTile(), two);
     }
 
-    @Test
-    public void testIsPlayerStuck() {
-        // already tested is stuck, so I just create a scenario where both workers are stuck
-        assertFalse(st.game.getP0().isPlayerStuck(st.game.getGameBoard()));
-        st.game.getGameBoard().getTile(0, 1).build();
-        st.game.getGameBoard().getTile(0, 1).build();
-        st.game.getGameBoard().getTile(1, 1).build();
-        st.game.getGameBoard().getTile(1, 1).build();
-        st.game.getGameBoard().getTile(1, 0).build();
-        st.game.getGameBoard().getTile(1, 0).build();
-        assertFalse(st.game.getP0().isPlayerStuck(st.game.getGameBoard())); // only one worker is stuck
-        st.game.getGameBoard().getTile(0, 2).build();
-        st.game.getGameBoard().getTile(0, 2).build();
-        st.game.getGameBoard().getTile(0, 3).build();
-        st.game.getGameBoard().getTile(0, 3).build();
-        st.game.getGameBoard().getTile(0, 4).build();
-        st.game.getGameBoard().getTile(0, 4).build();
-        st.game.getGameBoard().getTile(1, 4).build();
-        st.game.getGameBoard().getTile(1, 4).build();
-        st.game.getGameBoard().getTile(2, 4).build();
-        st.game.getGameBoard().getTile(2, 4).build();
-        st.game.getGameBoard().getTile(2, 3).build();
-        st.game.getGameBoard().getTile(2, 3).build();
-        st.game.getGameBoard().getTile(2, 2).build();
-        st.game.getGameBoard().getTile(2, 2).build();
-        st.game.getGameBoard().getTile(1, 2).build();
-        st.game.getGameBoard().getTile(1, 2).build();
-        assertTrue(st.game.getP0().isPlayerStuck(st.game.getGameBoard())); // both workers of player 1 is stuck
-    }
+//    @Test
+//    public void testIsPlayerStuck() {
+//        // already tested is stuck, so I just create a scenario where both workers are stuck
+//        assertFalse(st.game.getP0().isPlayerStuck(st.game.getGameBoard()));
+//        st.game.getGameBoard().getTile(0, 1).build();
+//        st.game.getGameBoard().getTile(0, 1).build();
+//        st.game.getGameBoard().getTile(1, 1).build();
+//        st.game.getGameBoard().getTile(1, 1).build();
+//        st.game.getGameBoard().getTile(1, 0).build();
+//        st.game.getGameBoard().getTile(1, 0).build();
+//        assertFalse(st.game.getP0().isPlayerStuck(st.game.getGameBoard())); // only one worker is stuck
+//        st.game.getGameBoard().getTile(0, 2).build();
+//        st.game.getGameBoard().getTile(0, 2).build();
+//        st.game.getGameBoard().getTile(0, 3).build();
+//        st.game.getGameBoard().getTile(0, 3).build();
+//        st.game.getGameBoard().getTile(0, 4).build();
+//        st.game.getGameBoard().getTile(0, 4).build();
+//        st.game.getGameBoard().getTile(1, 4).build();
+//        st.game.getGameBoard().getTile(1, 4).build();
+//        st.game.getGameBoard().getTile(2, 4).build();
+//        st.game.getGameBoard().getTile(2, 4).build();
+//        st.game.getGameBoard().getTile(2, 3).build();
+//        st.game.getGameBoard().getTile(2, 3).build();
+//        st.game.getGameBoard().getTile(2, 2).build();
+//        st.game.getGameBoard().getTile(2, 2).build();
+//        st.game.getGameBoard().getTile(1, 2).build();
+//        st.game.getGameBoard().getTile(1, 2).build();
+//        assertTrue(st.game.getP0().isPlayerStuck(st.game.getGameBoard())); // both workers of player 1 is stuck
+//    }
 
 //    @Test
 //    public void isWinner() {
@@ -129,19 +129,19 @@ public class PlayerTest {
 //        assertEquals(st.game.getP0().findCurrentTile(0), null);
 //    }
 
-    @Test
-    public void testIsStuck() {
-        // is valid tile is already tested, so I will just create a scenario
-        // where I either surround the worker with tall towers or other workers
-        assertFalse(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
-        st.game.getGameBoard().getTile(0, 1).build();
-        st.game.getGameBoard().getTile(0, 1).build();
-        st.game.getGameBoard().getTile(1, 0).build();
-        st.game.getGameBoard().getTile(1, 0).build();
-        st.game.getGameBoard().getTile(1, 1).build();
-        st.game.getGameBoard().getTile(1, 1).build();
-        TestCase.assertTrue(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
-    }
+//    @Test
+//    public void testIsStuck() {
+//        // is valid tile is already tested, so I will just create a scenario
+//        // where I either surround the worker with tall towers or other workers
+//        assertFalse(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
+//        st.game.getGameBoard().getTile(0, 1).build();
+//        st.game.getGameBoard().getTile(0, 1).build();
+//        st.game.getGameBoard().getTile(1, 0).build();
+//        st.game.getGameBoard().getTile(1, 0).build();
+//        st.game.getGameBoard().getTile(1, 1).build();
+//        st.game.getGameBoard().getTile(1, 1).build();
+//        TestCase.assertTrue(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
+//    }
 
 //    @Test
 //    public void testIsStuck2() {

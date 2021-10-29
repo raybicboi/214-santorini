@@ -36,27 +36,27 @@ public class WorkerTest {
         assertNull(st.game.getP0().getWorker(0).getCurrentTile());
     }
 
-    @Test
-    public void testReachThird() {
-        assertFalse(st.game.getP0().getWorker(0).reachedThird());
-        st.game.relocateWorker(0, 1, 0);
-        st.game.buildTower(0, 0, 0);
-        st.game.switchCurrentPlayer();
-        st.game.relocateWorker(0, 0, 0); // reached first level
-        assertFalse(st.game.getP0().getWorker(0).reachedThird());
-        st.game.buildTower(0, 1, 0);
-        st.game.switchCurrentPlayer();
-        st.game.buildTower(0, 1, 0);
-        st.game.switchCurrentPlayer();
-        st.game.relocateWorker(0, 1, 0); // reached second level
-        assertFalse(st.game.getP0().getWorker(0).reachedThird());
-        st.game.buildTower(0, 0, 0);
-        st.game.switchCurrentPlayer();
-        st.game.buildTower(0, 0, 0);
-        st.game.switchCurrentPlayer();
-        st.game.relocateWorker(0, 0, 0); // reached third level
-        assertTrue(st.game.getP0().getWorker(0).reachedThird());
-    }
+//    @Test
+//    public void testReachThird() {
+//        assertFalse(st.game.getP0().getWorker(0).reachedThird());
+//        st.game.relocateWorker(0, 1, 0);
+//        st.game.buildTower(0, 0, 0);
+//        st.game.switchCurrentPlayer();
+//        st.game.relocateWorker(0, 0, 0); // reached first level
+//        assertFalse(st.game.getP0().getWorker(0).reachedThird());
+//        st.game.buildTower(0, 1, 0);
+//        st.game.switchCurrentPlayer();
+//        st.game.buildTower(0, 1, 0);
+//        st.game.switchCurrentPlayer();
+//        st.game.relocateWorker(0, 1, 0); // reached second level
+//        assertFalse(st.game.getP0().getWorker(0).reachedThird());
+//        st.game.buildTower(0, 0, 0);
+//        st.game.switchCurrentPlayer();
+//        st.game.buildTower(0, 0, 0);
+//        st.game.switchCurrentPlayer();
+//        st.game.relocateWorker(0, 0, 0); // reached third level
+//        assertTrue(st.game.getP0().getWorker(0).reachedThird());
+//    }
 
     @Test
     public void testWorkerConstructor() {

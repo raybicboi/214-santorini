@@ -68,19 +68,6 @@ public class Player {
     }
 
     /**
-     * Helper method that determines if a player cannot make a move.
-     *
-     * @param b the board associated with the game
-     * @return boolean of whether the player can make a move
-     */
-    public boolean isPlayerStuck(Board b) {
-        for (Worker w : this.getWorkerList()) {
-            if (!isStuck(b, w.getWorkerId())) return false;
-        }
-        return true;
-    }
-
-    /**
      * Helper method that determines if a player reached third tower level.
      *
      * @return boolean of whether the player reached the third level
@@ -124,17 +111,4 @@ public class Player {
         return w.getCurrentTile();
     }
 
-    /**
-     * Helper function that determines if the worker cannot move to another space.
-     *
-     * @param b board representing the game
-     * @param id the id of the worker
-     * @return boolean of whether the worker can move
-     */
-    public boolean isStuck(Board b, int id) {
-        for (Tile t : b.getTileList()) {
-            if (b.isValidTile(t, id, this)) return false;
-        }
-        return true;
-    }
 }

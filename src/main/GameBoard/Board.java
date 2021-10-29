@@ -23,8 +23,6 @@ public class Board {
         }
     }
 
-
-
     // getters
     /**
      * Getter method for retrieving tiles on the current board.
@@ -81,8 +79,6 @@ public class Board {
         t.jumped();
         return true;
     }
-
-
 
     // helpers
     /**

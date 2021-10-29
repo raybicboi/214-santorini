@@ -5,9 +5,10 @@ import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
-public class GameLogic0 implements CardLogic {
+public class GameLogic implements CardLogic {
 
     private final Player p;
+    private final Player other;
     private final Game game;
 
     // constructor
@@ -15,9 +16,15 @@ public class GameLogic0 implements CardLogic {
      * GameLogic Constructor (arg)
      *
      */
-    public GameLogic0(Game game) {
+    public GameLogic(Game game, Player p) {
         this.game = game;
-        this.p = game.getP0();
+        if (p == game.getP0()) {
+            this.p = game.getP0();
+            this.other = game.getP1();
+        } else {
+            this.p = game.getP1();
+            this.other = game.getP0();
+        }
     }
 
     // methods
@@ -31,9 +38,8 @@ public class GameLogic0 implements CardLogic {
      * @param id the id of the player
      * @return boolean of whether the build succeeded
      */
-    @Override
     public boolean buildTower(int x, int y, int id) {
-        if(this.build(x, y, id, p)) {
+        if(this.buildHelper(x, y, id, p)) {
             game.switchCurrentPlayer();
             return true;
         }
@@ -49,7 +55,7 @@ public class GameLogic0 implements CardLogic {
      * @param p the player initiating that action
      * @return boolean of whether the build succeeded
      */
-    public boolean build(int x, int y, int id, Player p) {
+    public boolean buildHelper(int x, int y, int id, Player p) {
         Tile t = game.retrieveTile(x, y);
         if (!this.isLegalBuildTile(t, id, p)) {
             System.out.println("Cannot build on this tile!");
@@ -81,7 +87,7 @@ public class GameLogic0 implements CardLogic {
      * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal move
      */
-    private boolean tileBuildCheck(Tile other, int id, Player p) {
+    public boolean tileBuildCheck(Tile other, int id, Player p) {
         Tile t = p.findCurrentTile(id);
         if (t.getX() == other.getX() &&
                 t.getY() == other.getY()) return false;
@@ -90,8 +96,6 @@ public class GameLogic0 implements CardLogic {
         if (other.getHasWorker()) return false;
         return other.getCurrentLevel() < 4;
     }
-
-
 
     // MOVE
     /**
@@ -104,7 +108,7 @@ public class GameLogic0 implements CardLogic {
      */
     @Override
     public boolean relocateWorker(int x, int y, int workerId) {
-        if (this.relocate(x, y, workerId, p)) {
+        if (this.relocateHelper(x, y, workerId, p)) {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
@@ -122,7 +126,7 @@ public class GameLogic0 implements CardLogic {
      * @param p the player initiating that action
      * @return boolean of whether the worker has successfully moved
      */
-    public boolean relocate(int x, int y, int id, Player p) {
+    public boolean relocateHelper(int x, int y, int id, Player p) {
         Tile t = game.retrieveTile(x, y);
         if (!this.isLegalMoveTile(t, id, p)) {
             System.out.println("Cannot move to this tile!");
@@ -156,7 +160,7 @@ public class GameLogic0 implements CardLogic {
      * @param p the player initiating that action
      * @return boolean of whether 'other' is a legal move
      */
-    private boolean tileCheck(Tile other, int id, Player p) {
+    public boolean tileCheck(Tile other, int id, Player p) {
         Tile t = p.findCurrentTile(id);
         if (t.getCurrentLevel() < other.getCurrentLevel()) {
             if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;
@@ -175,10 +179,10 @@ public class GameLogic0 implements CardLogic {
     public Player getWinner() {
         if (isValidGame()) return null;
         Player p1 = game.getP1();
-        if (p.isPlayerStuck(game.getGameBoard())) {
+        if (isPlayerStuck(p)) {
             loser(p);
             return p1;
-        } else if (p1.isPlayerStuck(game.getGameBoard())) {
+        } else if (isPlayerStuck(p1)) {
             loser(p1);
             return p;
         }
@@ -206,46 +210,38 @@ public class GameLogic0 implements CardLogic {
      * @param p the player to be tested
      * @return boolean whether the player can make a move
      */
-    private boolean isValidHelp(Player p) {
-        if (p.isPlayerStuck(game.getGameBoard())) {
+    public boolean isValidHelp(Player p) {
+        if (isPlayerStuck(p)) {
             return false;
         }
         return !p.isWinner();
     }
 
-
-
     /**
-     * Private helper that prints a message for the losing player.
+     * Helper method that determines if a player cannot make a move.
      *
-     * @param p the player who lost
+     * @param p The player to be tested
+     * @return boolean of whether the player can make a move
      */
-    private void loser(Player p) {
-        System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
+    public boolean isPlayerStuck(Player p) {
+        for (Worker w : p.getWorkerList()) {
+            if (!isStuck(w.getWorkerId())) return false;
+        }
+        return true;
     }
 
     /**
-     * Private helper that prints a message for the winning player.
-     *
-     * @param p the player who won
+     * Helper function that determines if the worker cannot move to another space.
+     *     * @param id the id of the worker
+     * @return boolean of whether the worker can move
      */
-    private void winner(Player p) {
-        System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
+    public boolean isStuck(int id) {
+        for (Tile t : game.getGameBoard().getTileList()) {
+            if (isValidTile(t, id, p)) return false;
+        }
+        return true;
     }
 
-    // OTHER HELPERS
-    /**
-     * Private helper method that test if two values are within one.
-     *
-     * @param a - First int
-     * @param b - Second int
-     * @return boolean of whether a and b is within 1
-     */
-    private boolean withinOne(int a, int b) {
-        return (Math.abs(a - b) <= 1);
-    }
-
-    // method not in use
     /**
      * Sees if a worker can perform either move or build operation on a select tile.
      *
@@ -258,5 +254,35 @@ public class GameLogic0 implements CardLogic {
         Tile t = p.findCurrentTile(id);
         if (t != null) {return (this.isLegalBuildTile(other, id, p) && this.isLegalMoveTile(other, id, p));}
         return false;
+    }
+
+    // OTHER HELPERS
+    /**
+     * Private helper that prints a message for the losing player.
+     *
+     * @param p the player who lost
+     */
+    public void loser(Player p) {
+        System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
+    }
+
+    /**
+     * Private helper that prints a message for the winning player.
+     *
+     * @param p the player who won
+     */
+    public void winner(Player p) {
+        System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
+    }
+
+    /**
+     * Private helper method that test if two values are within one.
+     *
+     * @param a - First int
+     * @param b - Second int
+     * @return boolean of whether a and b is within 1
+     */
+    public boolean withinOne(int a, int b) {
+        return (Math.abs(a - b) <= 1);
     }
 }
