@@ -214,6 +214,7 @@ public abstract class AbstractGod implements CardLogic {
      */
     public void loser() {
         System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
+        System.out.println("Player " + other.toString() + "has won the match :)");
     }
 
     /**
@@ -222,6 +223,7 @@ public abstract class AbstractGod implements CardLogic {
      */
     public void winner() {
         System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
+        System.out.println("Player " + other.toString() + "has lost the match :(");
     }
 
     /**

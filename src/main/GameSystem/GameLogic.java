@@ -35,11 +35,11 @@ public class GameLogic implements CardLogic {
      *
      * @param x the x coordinate of the chosen tile
      * @param y the y coordinate of the chosen tile
-     * @param id the id of the player
+     * @param id the id of the worker
      * @return boolean of whether the build succeeded
      */
     public boolean buildTower(int x, int y, int id) {
-        if(this.buildHelper(x, y, id, p)) {
+        if(this.buildHelper(x, y, id)) {
             game.switchCurrentPlayer();
             return true;
         }
@@ -51,13 +51,12 @@ public class GameLogic implements CardLogic {
      *
      * @param x the x coordinate of the chosen tile
      * @param y the y coordinate of the chosen tile
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether the build succeeded
      */
-    public boolean buildHelper(int x, int y, int id, Player p) {
+    public boolean buildHelper(int x, int y, int id) {
         Tile t = game.retrieveTile(x, y);
-        if (!this.isLegalBuildTile(t, id, p)) {
+        if (!this.isLegalBuildTile(t, id)) {
             System.out.println("Cannot build on this tile!");
             return false;
         }
@@ -69,13 +68,12 @@ public class GameLogic implements CardLogic {
      * Sees if a worker can build on a select tile from its current location.
      *
      * @param other - the other tile to be tested
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether 'other' is a legal build
      */
-    public boolean isLegalBuildTile(Tile other, int id, Player p) {
+    public boolean isLegalBuildTile(Tile other, int id) {
         Tile t = p.findCurrentTile(id);
-        if (t != null) { return this.tileBuildCheck(other, id, p); }
+        if (t != null) { return this.tileBuildCheck(other, id); }
         return false;
     }
 
@@ -83,11 +81,10 @@ public class GameLogic implements CardLogic {
      * Private helper method that tests if another tile can be built on.
      *
      * @param other - the other tile to be tested
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether 'other' is a legal move
      */
-    public boolean tileBuildCheck(Tile other, int id, Player p) {
+    public boolean tileBuildCheck(Tile other, int id) {
         Tile t = p.findCurrentTile(id);
         if (t.getX() == other.getX() &&
                 t.getY() == other.getY()) return false;
@@ -108,7 +105,7 @@ public class GameLogic implements CardLogic {
      */
     @Override
     public boolean relocateWorker(int x, int y, int workerId) {
-        if (this.relocateHelper(x, y, workerId, p)) {
+        if (this.relocateHelper(x, y, workerId)) {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
@@ -122,13 +119,12 @@ public class GameLogic implements CardLogic {
      *
      * @param x the x coordinate of the test tile
      * @param y the y coordinate of the test tile
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether the worker has successfully moved
      */
-    public boolean relocateHelper(int x, int y, int id, Player p) {
+    public boolean relocateHelper(int x, int y, int id) {
         Tile t = game.retrieveTile(x, y);
-        if (!this.isLegalMoveTile(t, id, p)) {
+        if (!this.isLegalMoveTile(t, id)) {
             System.out.println("Cannot move to this tile!");
             return false;
         }
@@ -142,13 +138,12 @@ public class GameLogic implements CardLogic {
      * Sees if a worker can move from their current tile to a select tile.
      *
      * @param other - the other tile to be tested
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether 'other' is a legal move
      */
-    public boolean isLegalMoveTile(Tile other, int id, Player p) {
+    public boolean isLegalMoveTile(Tile other, int id) {
         Tile t = p.findCurrentTile(id);
-        if (t != null) { return this.tileCheck(other, id, p); }
+        if (t != null) { return this.tileCheck(other, id); }
         return false;
     }
 
@@ -156,17 +151,16 @@ public class GameLogic implements CardLogic {
      * Private helper method that tests if another tile can be relocated to.
      *
      * @param other - the other tile to be tested
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether 'other' is a legal move
      */
-    public boolean tileCheck(Tile other, int id, Player p) {
+    public boolean tileCheck(Tile other, int id) {
         Tile t = p.findCurrentTile(id);
         if (t.getCurrentLevel() < other.getCurrentLevel()) {
             if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;
         }
 //        if (other.currentLevel == 4) return false;
-        return tileBuildCheck(other, id, p);
+        return tileBuildCheck(other, id);
     }
 
     // GAME STATE
@@ -178,20 +172,15 @@ public class GameLogic implements CardLogic {
     @Override
     public Player getWinner() {
         if (isValidGame()) return null;
-        Player p1 = game.getP1();
-        if (isPlayerStuck(p)) {
-            loser(p);
-            return p1;
-        } else if (isPlayerStuck(p1)) {
-            loser(p1);
-            return p;
+        if (isPlayerStuck()) {
+            loser();
+            return other;
         }
         if (p.isWinner()) {
-            winner(p);
+            winner();
             return p;
         }
-        winner(p1);
-        return p1;
+        return null;
     }
 
     /**
@@ -200,30 +189,17 @@ public class GameLogic implements CardLogic {
      * @return boolean of whether the game is still going
      */
     public boolean isValidGame() {
-        Player p1 = game.getP1();
-        return isValidHelp(p) && isValidHelp(p1);
-    }
-
-    /**
-     * Private helper that checks if a player is stuck or has won.
-     *
-     * @param p the player to be tested
-     * @return boolean whether the player can make a move
-     */
-    public boolean isValidHelp(Player p) {
-        if (isPlayerStuck(p)) {
-            return false;
-        }
+        if (isPlayerStuck()) return false;
+        if (isOtherStuck()) return false;
         return !p.isWinner();
     }
 
     /**
      * Helper method that determines if a player cannot make a move.
      *
-     * @param p The player to be tested
      * @return boolean of whether the player can make a move
      */
-    public boolean isPlayerStuck(Player p) {
+    public boolean isPlayerStuck() {
         for (Worker w : p.getWorkerList()) {
             if (!isStuck(w.getWorkerId())) return false;
         }
@@ -231,13 +207,26 @@ public class GameLogic implements CardLogic {
     }
 
     /**
+     * Helper method that determines if the opposing player cannot make a move.
+     *
+     * @return boolean of whether the player can make a move
+     */
+    public boolean isOtherStuck() {
+        for (Worker w : other.getWorkerList()) {
+            if (!isStuck(w.getWorkerId())) return false;
+        }
+        return true;
+    }
+
+    /**
      * Helper function that determines if the worker cannot move to another space.
-     *     * @param id the id of the worker
+     *
+     * @param id the id of the worker
      * @return boolean of whether the worker can move
      */
     public boolean isStuck(int id) {
         for (Tile t : game.getGameBoard().getTileList()) {
-            if (isValidTile(t, id, p)) return false;
+            if (isValidTile(t, id)) return false;
         }
         return true;
     }
@@ -246,13 +235,12 @@ public class GameLogic implements CardLogic {
      * Sees if a worker can perform either move or build operation on a select tile.
      *
      * @param other - the other tile to be tested
-     * @param id the id of the player
-     * @param p the player initiating that action
+     * @param id the id of the worker
      * @return boolean of whether 'other' is a legal move or build
      */
-    public boolean isValidTile(Tile other, int id, Player p) {
+    public boolean isValidTile(Tile other, int id) {
         Tile t = p.findCurrentTile(id);
-        if (t != null) {return (this.isLegalBuildTile(other, id, p) && this.isLegalMoveTile(other, id, p));}
+        if (t != null) {return (this.isLegalBuildTile(other, id) && this.isLegalMoveTile(other, id));}
         return false;
     }
 
@@ -260,19 +248,19 @@ public class GameLogic implements CardLogic {
     /**
      * Private helper that prints a message for the losing player.
      *
-     * @param p the player who lost
      */
-    public void loser(Player p) {
+    public void loser() {
         System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
+        System.out.println("Player " + other.toString() + "has won the match :)");
     }
 
     /**
      * Private helper that prints a message for the winning player.
      *
-     * @param p the player who won
      */
-    public void winner(Player p) {
+    public void winner() {
         System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
+        System.out.println("Player " + other.toString() + "has lost the match :(");
     }
 
     /**
