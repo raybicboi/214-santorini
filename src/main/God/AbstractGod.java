@@ -2,6 +2,7 @@ package main.God;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
+import main.GameSystem.GameLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
@@ -145,17 +146,17 @@ public abstract class AbstractGod implements CardLogic {
      *
      * @return Player the winning player
      */
-    public abstract Player getWinner(); // PAN
+    public abstract Player getWinner(GameLogic gl); // PAN
 
     /**
      * Checks if the game state is valid.
      *
      * @return boolean of whether the game is still going
      */
-    public boolean isValidGame() {
+    public boolean isValidGame(GameLogic gl) {
         if (isPlayerStuck()) return false;
-        if (isOtherStuck()) return false;
-        return !p.isWinner();
+        if (gl.isPlayerStuck()) return false;
+        return !p.isWinner() && !other.isWinner();
     }
 
     /**
@@ -165,18 +166,6 @@ public abstract class AbstractGod implements CardLogic {
      */
     public boolean isPlayerStuck() {
         for (Worker w : p.getWorkerList()) {
-            if (!isStuck(w.getWorkerId())) return false;
-        }
-        return true;
-    }
-
-    /**
-     * Helper method that determines if the opposing player cannot make a move.
-     *
-     * @return boolean of whether the player can make a move
-     */
-    public boolean isOtherStuck() {
-        for (Worker w : other.getWorkerList()) {
             if (!isStuck(w.getWorkerId())) return false;
         }
         return true;

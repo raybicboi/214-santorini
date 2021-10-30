@@ -2,6 +2,7 @@ package main.God.Cards;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
+import main.GameSystem.GameLogic;
 import main.God.AbstractGod;
 import main.Player.Player;
 import main.Player.Worker;
@@ -117,8 +118,8 @@ public class Athena extends AbstractGod {
      * @return Player the winning player
      */
     @Override
-    public Player getWinner() {
-        if (isValidGame()) return null;
+    public Player getWinner(GameLogic gl) {
+        if (isValidGame(gl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;

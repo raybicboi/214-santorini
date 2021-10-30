@@ -1,6 +1,5 @@
 package test.Player;
 
-import junit.framework.TestCase;
 import main.GameBoard.Tile;
 import main.Player.Player;
 import main.Player.Worker;
@@ -49,51 +48,21 @@ public class PlayerTest {
         assertEquals(st.game.getP0().getWorker(0).getCurrentTile(), two);
     }
 
-//    @Test
-//    public void testIsPlayerStuck() {
-//        // already tested is stuck, so I just create a scenario where both workers are stuck
-//        assertFalse(st.game.getP0().isPlayerStuck(st.game.getGameBoard()));
-//        st.game.getGameBoard().getTile(0, 1).build();
-//        st.game.getGameBoard().getTile(0, 1).build();
-//        st.game.getGameBoard().getTile(1, 1).build();
-//        st.game.getGameBoard().getTile(1, 1).build();
-//        st.game.getGameBoard().getTile(1, 0).build();
-//        st.game.getGameBoard().getTile(1, 0).build();
-//        assertFalse(st.game.getP0().isPlayerStuck(st.game.getGameBoard())); // only one worker is stuck
-//        st.game.getGameBoard().getTile(0, 2).build();
-//        st.game.getGameBoard().getTile(0, 2).build();
-//        st.game.getGameBoard().getTile(0, 3).build();
-//        st.game.getGameBoard().getTile(0, 3).build();
-//        st.game.getGameBoard().getTile(0, 4).build();
-//        st.game.getGameBoard().getTile(0, 4).build();
-//        st.game.getGameBoard().getTile(1, 4).build();
-//        st.game.getGameBoard().getTile(1, 4).build();
-//        st.game.getGameBoard().getTile(2, 4).build();
-//        st.game.getGameBoard().getTile(2, 4).build();
-//        st.game.getGameBoard().getTile(2, 3).build();
-//        st.game.getGameBoard().getTile(2, 3).build();
-//        st.game.getGameBoard().getTile(2, 2).build();
-//        st.game.getGameBoard().getTile(2, 2).build();
-//        st.game.getGameBoard().getTile(1, 2).build();
-//        st.game.getGameBoard().getTile(1, 2).build();
-//        assertTrue(st.game.getP0().isPlayerStuck(st.game.getGameBoard())); // both workers of player 1 is stuck
-//    }
-
-//    @Test
-//    public void isWinner() {
-//        // already tested reached third
-//        st.game.relocateWorker(0,1, 0); // player 0
-//        st.game.getGameBoard().getTile(0, 0).build();
-//        st.game.relocateWorker(0,0, 0); // reached first level
-//        st.game.getGameBoard().getTile(0, 1).build();
-//        st.game.getGameBoard().getTile(0, 1).build();
-//        st.game.relocateWorker(0,1, 0); // reached second level
-//        st.game.getGameBoard().getTile(0, 0).build();
-//        st.game.getGameBoard().getTile(0, 0).build();
-//        assertFalse(st.game.getP0().isWinner());
-//        st.game.relocateWorker(0,0, 0); // reached third level
-//        assertTrue(st.game.getP0().isWinner());
-//    }
+    @Test
+    public void isWinner() {
+        // already tested reached third
+        st.p0.relocateWorker(0,1, 0); // player 0
+        st.game.getGameBoard().getTile(0, 0).build();
+        st.p0.relocateWorker(0,0, 0); // reached first level
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.game.getGameBoard().getTile(0, 1).build();
+        st.p0.relocateWorker(0,1, 0); // reached second level
+        st.game.getGameBoard().getTile(0, 0).build();
+        st.game.getGameBoard().getTile(0, 0).build();
+        assertFalse(st.game.getP0().isWinner());
+        st.p0.relocateWorker(0,0, 0); // reached third level
+        assertTrue(st.game.getP0().isWinner());
+    }
 
     @Test
     public void testClearPlayer() {
@@ -115,50 +84,19 @@ public class PlayerTest {
         assertTrue(st.game.getP0().checkWorkerNull(0));
     }
 
-//    @Test
-//    public void testFindCurrentTile() {
-//        Tile one = st.game.getGameBoard().getTile(0, 0);
-//        assertEquals(st.game.getP0().findCurrentTile(0), one);
-//
-//        st.game.relocateWorker(0, 1, 0);
-//
-//        Tile two = st.game.getGameBoard().getTile(0, 1);
-//        assertEquals(st.game.getP0().findCurrentTile(0), two);
-//
-//        st.game.getP0().clearPlayer();
-//        assertEquals(st.game.getP0().findCurrentTile(0), null);
-//    }
+    @Test
+    public void testFindCurrentTile() {
+        Tile one = st.game.getGameBoard().getTile(0, 0);
+        assertEquals(st.game.getP0().findCurrentTile(0), one);
 
-//    @Test
-//    public void testIsStuck() {
-//        // is valid tile is already tested, so I will just create a scenario
-//        // where I either surround the worker with tall towers or other workers
-//        assertFalse(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
-//        st.game.getGameBoard().getTile(0, 1).build();
-//        st.game.getGameBoard().getTile(0, 1).build();
-//        st.game.getGameBoard().getTile(1, 0).build();
-//        st.game.getGameBoard().getTile(1, 0).build();
-//        st.game.getGameBoard().getTile(1, 1).build();
-//        st.game.getGameBoard().getTile(1, 1).build();
-//        TestCase.assertTrue(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
-//    }
+        st.p0.relocateWorker(0, 1, 0);
 
-//    @Test
-//    public void testIsStuck2() {
-//        // is valid tile is already tested, so I will just create a scenario
-//        // where I either surround the worker with tall towers or other workers
-//        assertFalse(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
-//        st.game.relocateWorker(1, 2, 1); // player 1
-//        st.game.relocateWorker(1, 1, 1);
-//        st.game.relocateWorker(0, 1, 1);
-//        st.game.switchCurrentPlayer();
-//        st.game.relocateWorker(3, 3, 0); // switch to player 2
-//        st.game.relocateWorker(2, 2, 0);
-//        st.game.relocateWorker(1, 1, 0);
-//        st.game.relocateWorker(2, 1, 1);
-//        st.game.relocateWorker(1, 0, 1);
-//        TestCase.assertTrue(st.game.getP0().isStuck(st.game.getGameBoard(), 0));
-//    }
+        Tile two = st.game.getGameBoard().getTile(0, 1);
+        assertEquals(st.game.getP0().findCurrentTile(0), two);
+
+        st.game.getP0().clearPlayer();
+        assertEquals(st.game.getP0().findCurrentTile(0), null);
+    }
 
     @Test
     public void testPlayerConstructor() {

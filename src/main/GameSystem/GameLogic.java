@@ -27,6 +27,9 @@ public class GameLogic implements CardLogic {
         }
     }
 
+    public Player getOther() {
+        return this.other;
+    }
     // methods
 
     // BUILD
@@ -170,8 +173,8 @@ public class GameLogic implements CardLogic {
      * @return Player the winning player
      */
     @Override
-    public Player getWinner() {
-        if (isValidGame()) return null;
+    public Player getWinner(GameLogic gl) {
+        if (isValidGame(gl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;
@@ -188,10 +191,10 @@ public class GameLogic implements CardLogic {
      *
      * @return boolean of whether the game is still going
      */
-    public boolean isValidGame() {
+    public boolean isValidGame(GameLogic gl) {
         if (isPlayerStuck()) return false;
-        if (isOtherStuck()) return false;
-        return !p.isWinner();
+        if (gl.isPlayerStuck()) return false;
+        return !p.isWinner() && !other.isWinner();
     }
 
     /**
@@ -201,18 +204,6 @@ public class GameLogic implements CardLogic {
      */
     public boolean isPlayerStuck() {
         for (Worker w : p.getWorkerList()) {
-            if (!isStuck(w.getWorkerId())) return false;
-        }
-        return true;
-    }
-
-    /**
-     * Helper method that determines if the opposing player cannot make a move.
-     *
-     * @return boolean of whether the player can make a move
-     */
-    public boolean isOtherStuck() {
-        for (Worker w : other.getWorkerList()) {
             if (!isStuck(w.getWorkerId())) return false;
         }
         return true;
