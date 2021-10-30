@@ -2,8 +2,8 @@ package main.God.Cards;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
-import main.GameSystem.GameLogic;
 import main.God.AbstractGod;
+import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
@@ -23,8 +23,26 @@ public class Demeter extends AbstractGod {
         firstY = -1;
     }
 
-    // methods
+    // Getters
+    /**
+     * Getter method to return the stored x coordinate.
+     *
+     * @return int of the x coordinate
+     */
+    public int getFirstX() {
+        return this.firstX;
+    }
 
+    /**
+     * Getter method to return the stored y coordinate.
+     *
+     * @return int of the y coordinate
+     */
+    public int getFirstY() {
+        return this.firstY;
+    }
+
+    // methods
     // BUILD
     /**
      * Builds/Adds a "tower" onto the tile.
@@ -90,20 +108,6 @@ public class Demeter extends AbstractGod {
     }
 
     /**
-     * Sees if a worker can move from their current tile to a select tile.
-     *
-     * @param other - the other tile to be tested
-     * @param id the id of the worker
-     * @return boolean of whether 'other' is a legal move
-     */
-    @Override
-    public boolean isLegalMoveTile(Tile other, int id) {
-        Tile t = p.findCurrentTile(id);
-        if (t != null) { return this.tileCheck(other, id); }
-        return false;
-    }
-
-    /**
      * Private helper method that tests if another tile can be relocated to.
      *
      * @param other - the other tile to be tested
@@ -128,11 +132,12 @@ public class Demeter extends AbstractGod {
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
+     * @param cl the opposing card logic
      * @return Player the winning player
      */
     @Override
-    public Player getWinner(GameLogic gl) {
-        if (isValidGame(gl)) return null;
+    public Player getWinner(CardLogic cl) {
+        if (isValidGame(cl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;

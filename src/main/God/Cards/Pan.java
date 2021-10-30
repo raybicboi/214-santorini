@@ -2,8 +2,8 @@ package main.God.Cards;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
-import main.GameSystem.GameLogic;
 import main.God.AbstractGod;
+import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
@@ -19,6 +19,16 @@ public class Pan extends AbstractGod {
     public Pan(Game game, Player p) {
         super(game, p);
         this.panFlag = false;
+    }
+
+    // Getters
+    /**
+     * Getter method for the pan flag.
+     *
+     * @return boolean value of the pan flag
+     */
+    public boolean getPanFlag() {
+        return this.panFlag;
     }
 
     // methods
@@ -66,20 +76,6 @@ public class Pan extends AbstractGod {
     }
 
     /**
-     * Sees if a worker can move from their current tile to a select tile.
-     *
-     * @param other - the other tile to be tested
-     * @param id the id of the worker
-     * @return boolean of whether 'other' is a legal move
-     */
-    @Override
-    public boolean isLegalMoveTile(Tile other, int id) {
-        Tile t = p.findCurrentTile(id);
-        if (t != null) { return this.tileCheck(other, id); }
-        return false;
-    }
-
-    /**
      * Private helper method that tests if another tile can be relocated to.
      *
      * @param other - the other tile to be tested
@@ -104,15 +100,17 @@ public class Pan extends AbstractGod {
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
+     * @param cl the opposing card logic
      * @return Player the winning player
      */
     @Override // MODIFIED
-    public Player getWinner(GameLogic gl) {
-        if (isValidGame(gl)) return null;
+    public Player getWinner(CardLogic cl) {
         if (this.panFlag) {
-            winner();
+            System.out.println("Player " + p.toString() + " has won due to dropping 2 levels with the Pan perk!");
+            System.out.println("Player " + other.toString() + " has lost the match :(");
             return p;
         }
+        if (isValidGame(cl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;

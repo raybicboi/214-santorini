@@ -2,8 +2,8 @@ package main.God.Cards;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
-import main.GameSystem.GameLogic;
 import main.God.AbstractGod;
+import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
@@ -60,21 +60,6 @@ public class Minotaur extends AbstractGod {
     }
 
     /**
-     * Sees if a worker can move from their current tile to a select tile.
-     *
-     * @param other - the other tile to be tested
-     * @param id the id of the worker
-     * @return boolean of whether 'other' is a legal move
-     */
-    @Override // MODIFIED
-    public boolean isLegalMoveTile(Tile other, int id) {
-        if (p == this.other) return !other.getHasWorker(); // change this line
-        Tile t = this.p.findCurrentTile(id);
-        if (t != null) { return this.tileCheck(other, id); }
-        return false;
-    }
-
-    /**
      * Private helper method that tests if another tile can be relocated to.
      *
      * @param other - the other tile to be tested
@@ -95,7 +80,6 @@ public class Minotaur extends AbstractGod {
         return tileMinCheck(other, id);
     }
 
-    // NEW METHOD
     /**
      * Private helper method that tests if another tile can be moved to.
      *
@@ -103,7 +87,7 @@ public class Minotaur extends AbstractGod {
      * @param id the id of the worker
      * @return boolean of whether 'other' is a legal move
      */
-    private boolean tileMinCheck(Tile other, int id) {
+    private boolean tileMinCheck(Tile other, int id) { // NEW METHOD
         Tile t = p.findCurrentTile(id);
         if (t.getX() == other.getX() &&
                 t.getY() == other.getY()) return false;
@@ -118,13 +102,13 @@ public class Minotaur extends AbstractGod {
                 int thisY = t.getY();
 
                 if (otherX - thisX == 1 && otherY == thisY && otherX <= 3) {
-                    return relocateWorker(otherX + 1, otherY, wid);
+                    return relocateOpposite(otherX + 1, otherY, wid);
                 } else if (thisX - otherX == 1 && otherY == thisY && otherX >= 1) {
-                    return relocateWorker(otherX - 1, otherY, wid);
+                    return relocateOpposite(otherX - 1, otherY, wid);
                 } else if (otherY - thisY == 1 && otherX == thisX && otherY <= 3) {
-                    return relocateWorker(otherX, otherY + 1, wid);
+                    return relocateOpposite(otherX, otherY + 1, wid);
                 } else if (thisY - otherY == 1 && otherX == thisX && otherY >= 1) {
-                    return relocateWorker(otherX, otherY - 1, wid);
+                    return relocateOpposite(otherX, otherY - 1, wid);
                 }
             }
         }
@@ -132,15 +116,68 @@ public class Minotaur extends AbstractGod {
         return other.getCurrentLevel() < 4;
     }
 
+    /**
+     * Private helper method that tests if another tile can be moved to.
+     *
+     * @param x - the x coordinate of the tile
+     * @param y - the y coordinate of the tile
+     * @param workerId the id of the worker
+     * @return boolean of whether the minotaur "push" has succeeded
+     */
+    private boolean relocateOpposite(int x, int y, int workerId) { // NEW METHOD
+        if (this.relocateHelperOpposite(x, y, workerId)) {
+            Worker w = other.getWorker(workerId);
+            Tile t = game.retrieveTile(x, y);
+            other.changeWorkerTile(w, t);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Allows the opposite worker to move tiles, if permitted.
+     *
+     * @param x the x coordinate of the test tile
+     * @param y the y coordinate of the test tile
+     * @param id the id of the worker
+     * @return boolean of whether the worker has successfully moved
+     */
+    private boolean relocateHelperOpposite(int x, int y, int id) { // NEW METHOD
+        Tile t = game.retrieveTile(x, y);
+        if (!this.isLegalMoveTileOpposite(t, id)) {
+            System.out.println("Cannot move to this tile!");
+            return false;
+        }
+        Tile old = other.findCurrentTile(id);
+        old.jumped();
+        t.jumped();
+        return true;
+    }
+
+    /**
+     * Sees if the worker to be pushed can move from their current tile to a select tile.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    private boolean isLegalMoveTileOpposite(Tile other, int id) { // NEW METHOD
+        Tile t = this.other.findCurrentTile(id);
+        if (t == null) { return false; }
+        if (other.getHasWorker()) { return false; }
+        return other.getCurrentLevel() < 4;
+    }
+
     // GAME STATE
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
+     * @param cl the opposing god card logic
      * @return Player the winning player
      */
     @Override
-    public Player getWinner(GameLogic gl) {
-        if (isValidGame(gl)) return null;
+    public Player getWinner(CardLogic cl) {
+        if (isValidGame(cl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;

@@ -170,11 +170,12 @@ public class GameLogic implements CardLogic {
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
+     * @param cl the opposing card logic
      * @return Player the winning player
      */
     @Override
-    public Player getWinner(GameLogic gl) {
-        if (isValidGame(gl)) return null;
+    public Player getWinner(CardLogic cl) {
+        if (isValidGame(cl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;
@@ -189,11 +190,12 @@ public class GameLogic implements CardLogic {
     /**
      * Checks if the game state is valid.
      *
+     * @param cl the opposing card logic
      * @return boolean of whether the game is still going
      */
-    public boolean isValidGame(GameLogic gl) {
+    public boolean isValidGame(CardLogic cl) {
         if (isPlayerStuck()) return false;
-        if (gl.isPlayerStuck()) return false;
+        if (cl.isPlayerStuck()) return false;
         return !p.isWinner() && !other.isWinner();
     }
 

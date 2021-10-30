@@ -1,7 +1,6 @@
 package main.God;
 
 import main.GameBoard.Tile;
-import main.GameSystem.GameLogic;
 import main.Player.Player;
 
 public interface CardLogic {
@@ -25,9 +24,9 @@ public interface CardLogic {
     boolean tileCheck(Tile other, int id);
 
     // GAME STATE
-    Player getWinner(GameLogic gl);
+    Player getWinner(CardLogic gl);
 
-    boolean isValidGame(GameLogic other);
+    boolean isValidGame(CardLogic other);
 
     boolean isPlayerStuck();
 

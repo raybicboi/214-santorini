@@ -2,7 +2,6 @@ package main.God;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
-import main.GameSystem.GameLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
@@ -129,7 +128,11 @@ public abstract class AbstractGod implements CardLogic {
      * @param id the id of the worker
      * @return boolean of whether 'other' is a legal move
      */
-    public abstract boolean isLegalMoveTile(Tile other, int id); // MINOTAUR
+    public boolean isLegalMoveTile(Tile other, int id) {
+        Tile t = this.p.findCurrentTile(id);
+        if (t != null) { return this.tileCheck(other, id); }
+        return false;
+    }
 
     /**
      * Private helper method that tests if another tile can be relocated to.
@@ -144,18 +147,20 @@ public abstract class AbstractGod implements CardLogic {
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
+     * @param cl the opposing card logic
      * @return Player the winning player
      */
-    public abstract Player getWinner(GameLogic gl); // PAN
+    public abstract Player getWinner(CardLogic cl); // PAN
 
     /**
      * Checks if the game state is valid.
      *
+     * @param cl the opposing card logic
      * @return boolean of whether the game is still going
      */
-    public boolean isValidGame(GameLogic gl) {
+    public boolean isValidGame(CardLogic cl) {
         if (isPlayerStuck()) return false;
-        if (gl.isPlayerStuck()) return false;
+        if (cl.isPlayerStuck()) return false;
         return !p.isWinner() && !other.isWinner();
     }
 

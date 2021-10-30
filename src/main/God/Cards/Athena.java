@@ -2,8 +2,8 @@ package main.God.Cards;
 
 import main.GameBoard.Tile;
 import main.GameSystem.Game;
-import main.GameSystem.GameLogic;
 import main.God.AbstractGod;
+import main.God.CardLogic;
 import main.Player.Player;
 import main.Player.Worker;
 
@@ -38,7 +38,7 @@ public class Athena extends AbstractGod {
         return false;
     }
 
-    // MOVE
+    // MOVE MODIFIED
     /**
      * Moves a worker to another tile.
      *
@@ -57,6 +57,7 @@ public class Athena extends AbstractGod {
             p.changeWorkerTile(w, t);
 
             if (isHigher(original, t)) athena = true;
+            else if (!isHigher(original, t)) athena = false;
             return true;
         }
         return false;
@@ -74,20 +75,6 @@ public class Athena extends AbstractGod {
         int oldLevel = oldTile.getCurrentLevel();
         int newLevel = newTile.getCurrentLevel();
         return newLevel > oldLevel;
-    }
-
-    /**
-     * Sees if a worker can move from their current tile to a select tile.
-     *
-     * @param other - the other tile to be tested
-     * @param id the id of the worker
-     * @return boolean of whether 'other' is a legal move
-     */
-    @Override
-    public boolean isLegalMoveTile(Tile other, int id) {
-        Tile t = p.findCurrentTile(id);
-        if (t != null) { return this.tileCheck(other, id); }
-        return false;
     }
 
     /**
@@ -115,11 +102,12 @@ public class Athena extends AbstractGod {
     /**
      * At any given point in the game, determines the winner- or returns null if there is no winner.
      *
+     * @param cl the opposing card logic
      * @return Player the winning player
      */
     @Override
-    public Player getWinner(GameLogic gl) {
-        if (isValidGame(gl)) return null;
+    public Player getWinner(CardLogic cl) {
+        if (isValidGame(cl)) return null;
         if (isPlayerStuck()) {
             loser();
             return other;
