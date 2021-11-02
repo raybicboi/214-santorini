@@ -33,22 +33,47 @@ public abstract class AbstractGod implements CardLogic {
     }
 
     // Getters
+    /**
+     * Getter method for getting the other player.
+     *
+     * @return Player the other player
+     */
     public Player getOther() {
         return this.other;
     }
 
+    /**
+     * Getter method for getting the player.
+     *
+     * @return Player the player
+     */
     public Player getPlayer() {
         return this.p;
     }
 
+    /**
+     * Getter method for getting the game.
+     *
+     * @return Game the game
+     */
     public Game getGame() {
         return this.game;
     }
 
+    /**
+     * Getter method for getting the canMove flag.
+     *
+     * @return boolean the value of canMove
+     */
     public boolean getCanMove() {
         return this.canMove;
     }
 
+    /**
+     * Getter method for getting the canBuild flag.
+     *
+     * @return boolean the value of canBuild
+     */
     public boolean getCanBuild() {
         return this.canBuild;
     }

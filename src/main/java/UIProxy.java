@@ -41,14 +41,30 @@ public class UIProxy {
     private static String getInstructions(CardLogic game1, CardLogic game2) {
         String instructions;
         instructions = "";
-        if (game1.getWinner(game2) == game1.getPlayer()) {
+        boolean tag1 = false;
+        for (Worker w: game1.getGame().getP0().getWorkerList()) {
+            if (null != w.getCurrentTile()) tag1 = true;
+        }
+        boolean tag2 = false;
+        for (Worker w: game1.getGame().getP1().getWorkerList()) {
+            if (null != w.getCurrentTile()) tag2 = true;
+        }
+
+        if (!tag1) {
+            instructions = "Drop workers for Player " + (game1.getPlayer().getPlayerId());
+        } else if (!tag2) {
+            instructions = "Drop workers for Player " + (game1.getOther().getPlayerId());
+        } else if (game1.getWinner(game2) == game1.getPlayer()) {
             instructions = "Player " + (game1.getPlayer().getPlayerId()) + " has won.";
         } else if (game2.getWinner(game1) == game2.getPlayer()) {
             instructions = "Player " + (game2.getPlayer().getPlayerId()) + " has won.";
         } else if (game1.getGame().getCurrentPlayer() == game1.getPlayer()) {
-            instructions = "Next turn: Player " +  game1.getPlayer().getPlayerId() + ".";
+            if (game1.getCanMove()) instructions = "Next turn: Player " +  game1.getPlayer().getPlayerId() + " move.";
+            else if (game1.getCanBuild()) instructions = "Next turn: Player " +  game1.getPlayer().getPlayerId() + " build.";
+
         } else if ((game1.getGame().getCurrentPlayer() == game2.getPlayer())) {
-            instructions = "Next turn: Player " +  game2.getPlayer().getPlayerId() + ".";
+            if (game2.getCanMove()) instructions = "Next turn: Player " +  game2.getPlayer().getPlayerId() + " move.";
+            else if (game2.getCanBuild()) instructions = "Next turn: Player " +  game2.getPlayer().getPlayerId() + " build.";
         }
         return instructions;
     }
