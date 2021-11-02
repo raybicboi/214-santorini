@@ -269,4 +269,13 @@ public class GameLogicTest {
 //        st.game.switchCurrentPlayer();
         assertFalse(st.p0.buildTower(1, 0, 0)); // cannot build on a domed tower
     }
+
+    @Test
+    public void testGetCloseWorker() {
+        // returns either 0 or 1, 0 is default value
+        assertEquals(st.p0.getCloseWorker(1, 1), 0); // only worker 0 can access 1-1
+        assertEquals(st.p0.getCloseWorker(1, 4), 1); // only worker 1 can access 1-4
+        assertEquals(st.p1.getCloseWorker(3, 3), 0); // if both workers can move here, returns 0
+        assertEquals(st.p1.getCloseWorker(4, 4), 0); // not applicable since there is a worker on 4-4, returns 0
+    }
 }

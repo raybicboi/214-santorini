@@ -90,10 +90,10 @@ public class GameLogic implements CardLogic {
      * @return boolean of whether the build succeeded
      */
     public boolean buildTower(int x, int y, int id) {
-        if (!canBuild) {
-            System.out.println("Time to move");
-            return false;
-        }
+//        if (!canBuild) {
+//            System.out.println("Time to move");
+//            return false;
+//        }
         if(this.buildHelper(x, y, id)) {
             game.switchCurrentPlayer();
             canMove = true;
@@ -162,10 +162,10 @@ public class GameLogic implements CardLogic {
      */
     @Override
     public boolean relocateWorker(int x, int y, int workerId) {
-        if (!canMove) {
-            System.out.println("Time to build");
-            return false;
-        }
+//        if (!canMove) {
+//            System.out.println("Time to build");
+//            return false;
+//        }
         if (this.relocateHelper(x, y, workerId)) {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);

@@ -62,7 +62,6 @@ public class UIProxy {
         } else if (game1.getGame().getCurrentPlayer() == game1.getPlayer()) {
             if (game1.getCanMove()) instructions = "Next turn: Player " +  game1.getPlayer().getPlayerId() + " move.";
             else if (game1.getCanBuild()) instructions = "Next turn: Player " +  game1.getPlayer().getPlayerId() + " build.";
-
         } else if ((game1.getGame().getCurrentPlayer() == game2.getPlayer())) {
             if (game2.getCanMove()) instructions = "Next turn: Player " +  game2.getPlayer().getPlayerId() + " move.";
             else if (game2.getCanBuild()) instructions = "Next turn: Player " +  game2.getPlayer().getPlayerId() + " build.";
@@ -93,7 +92,7 @@ public class UIProxy {
                 String clazz = "";
                 Tile tile = board.getTile(x, y);
                 Player curr = game1.getGame().getCurrentPlayer();
-                if (dropId != -1) {
+                if (dropId != -1) { // if not all workers have been dropped
                     id = dropId;
                     clazz = "playable";
                 } else if (tile.getHasWorker()) {
