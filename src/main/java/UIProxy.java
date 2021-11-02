@@ -18,7 +18,7 @@ public class UIProxy {
     }
 
     public static UIProxy forGame(CardLogic game1, CardLogic game2) {
-        Cell[] cells = getCells(game1);
+        Cell[] cells = getCells(game1, game2);
         String instructions = getInstructions(game1, game2);
         return new UIProxy(instructions, cells);
     }
@@ -41,13 +41,14 @@ public class UIProxy {
     private static String getInstructions(CardLogic game1, CardLogic game2) {
         String instructions;
         instructions = "";
-        boolean tag1 = false;
+        boolean tag1 = true;
         for (Worker w: game1.getGame().getP0().getWorkerList()) {
-            if (null != w.getCurrentTile()) tag1 = true;
+            if (null == w.getCurrentTile()) tag1 = false;
         }
-        boolean tag2 = false;
+
+        boolean tag2 = true;
         for (Worker w: game1.getGame().getP1().getWorkerList()) {
-            if (null != w.getCurrentTile()) tag2 = true;
+            if (null == w.getCurrentTile()) tag2 = false;
         }
 
         if (!tag1) {
@@ -69,43 +70,75 @@ public class UIProxy {
         return instructions;
     }
 
-    private static Cell[] getCells(CardLogic game1) {
+    private static Cell[] getCells(CardLogic game1, CardLogic game2) {
         Cell cells[] = new Cell[25];
         Board board = game1.getGame().getGameBoard();
+        int id;
+        id = 0; // temp assignment
         for (int x = 0; x <= 4; x++) {
             for (int y = 0; y <= 4; y++) {
+                int dropId = -1;
+                Worker w00 = game2.getPlayer().getWorker(0);
+                Worker w11 = game2.getPlayer().getWorker(1);
+                if (w00.getCurrentTile() == null) dropId = 0;
+                else if (w11.getCurrentTile() == null) dropId = 1;
+
+                Worker w0 = game1.getPlayer().getWorker(0);
+                Worker w1 = game1.getPlayer().getWorker(1);
+                if (w0.getCurrentTile() == null) dropId = 0;
+                else if (w1.getCurrentTile() == null) dropId = 1;
+
                 String text = "";
                 String link = "";
                 String clazz = "";
                 Tile tile = board.getTile(x, y);
-//                Player curr = game1.getGame().getCurrentPlayer();
-                if (tile.getHasWorker()) {
+                Player curr = game1.getGame().getCurrentPlayer();
+                if (dropId != -1) {
+                    id = dropId;
+                    clazz = "playable";
+                } else if (tile.getHasWorker()) {
                     for (Worker w : game1.getPlayer().getWorkerList()) {
-                        if (w.getCurrentTile() == tile) text = "player 0";
+                        if (w.getCurrentTile() == tile) {
+                            if (w.getWorkerId() == 0) id = 0;
+                            else id = 1;
+                            text = "player 0 w-" + id;
+                            clazz = "playable-player";
+                        }
                     }
                     for (Worker w : game1.getOther().getWorkerList()) {
-                        if (w.getCurrentTile() == tile) text = "player 1";
+                        if (w.getCurrentTile() == tile) {
+                            if (w.getWorkerId() == 0) id = 0;
+                            else id = 1;
+                            text = "player 1 w-" + id;
+                            clazz = "playable-player";
+                        }
                     }
                 } else if (tile.getCurrentLevel() == 1)  {
+                    if (curr == game1.getPlayer()) id = game1.getCloseWorker(x, y);
+                    else id = game2.getCloseWorker(x, y);
                     text = "1";
                     clazz = "playable";
-                    link = "/play?x=" + x + "&y=" + y;
                 } else if (tile.getCurrentLevel() == 2) {
+                    if (curr == game1.getPlayer()) id = game1.getCloseWorker(x, y);
+                    else id = game2.getCloseWorker(x, y);
                     text = "2";
                     clazz = "playable";
-                    link = "/play?x=" + x + "&y=" + y;
                 } else if (tile.getCurrentLevel() == 3) {
+                    if (curr == game1.getPlayer()) id = game1.getCloseWorker(x, y);
+                    else id = game2.getCloseWorker(x, y);
                     text = "3";
                     clazz = "playable";
-                    link = "/play?x=" + x + "&y=" + y;
                 } else if (tile.getCurrentLevel() == 4) {
+                    if (curr == game1.getPlayer()) id = game1.getCloseWorker(x, y);
+                    else id = game2.getCloseWorker(x, y);
                     text = "4";
                     clazz = "playable";
-                    link = "/play?x=" + x + "&y=" + y;
-                } else {
+                } else { // tiles that have not been built and does not contain a worker
+                    if (curr == game1.getPlayer()) id = game1.getCloseWorker(x, y);
+                    else id = game2.getCloseWorker(x, y);
                     clazz = "playable";
-                    link = "/play?x=" + x + "&y=" + y;
                 }
+                link = "/play?x=" + x + "&y=" + y + "&id=" + id;
                 cells[5 * x + y] = new Cell(text, clazz, link);
             }
         }

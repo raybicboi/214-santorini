@@ -279,4 +279,18 @@ public abstract class AbstractGod implements CardLogic {
     public boolean withinOne(int a, int b) {
         return (Math.abs(a - b) <= 1);
     }
+
+    /**
+     * Helper method returns any worker id that is neighboring the tile retrieved from the x y.
+     *
+     * @param x - x coordinate
+     * @param y - y coordinate
+     * @return int the worker id value
+     */
+    public int getCloseWorker(int x, int y) {
+        Tile other = game.retrieveTile(x, y);
+        if (tileBuildCheck(other, 0)) return 0;
+        if (tileBuildCheck(other, 1)) return 1;
+        return 0;
+    }
 }

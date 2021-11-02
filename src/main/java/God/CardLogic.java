@@ -53,4 +53,6 @@ public interface CardLogic {
     void winner();
 
     boolean withinOne(int a, int b);
+
+    int getCloseWorker(int x, int y);
 }
