@@ -1,0 +1,10 @@
+Player\PlayerTest.class
+GameBoard\BoardTest.class
+GameBoard\TileTest.class
+GameSystem\GameTest.class
+GameSystem\GameLogicTest.class
+God\Cards\PanTest.class
+God\Cards\DemeterTest.class
+God\Cards\AthenaTest.class
+God\Cards\MinotaurTest.class
+Player\WorkerTest.class

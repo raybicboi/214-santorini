@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GodSetupTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">Testing</a> &gt; <span class="el_source">GodSetupTest.java</span></div><h1>GodSetupTest.java</h1><pre class="source lang-java linenums">package Testing;
+
+import GameSystem.Game;
+import GameSystem.GameLogic;
+import God.Cards.Athena;
+import God.Cards.Demeter;
+import God.Cards.Minotaur;
+import God.Cards.Pan;
+
+<span class="fc" id="L10">public class GodSetupTest {</span>
+
+    public Game game;
+    public Demeter dp1;
+    public Minotaur md1;
+    public Pan pd1;
+    public Athena ap1;
+    public GameLogic gl1;
+
+    public void setUp() {
+<span class="fc" id="L20">        game = new Game();</span>
+
+<span class="fc" id="L22">        game.dropWorker(0, 0, 0, this.game.getP0());</span>
+<span class="fc" id="L23">        game.dropWorker(1, 3, 1, this.game.getP0());</span>
+<span class="fc" id="L24">        game.dropWorker(4, 4, 0, this.game.getP1());</span>
+<span class="fc" id="L25">        game.dropWorker(3, 2, 1, this.game.getP1());</span>
+
+<span class="fc" id="L27">        dp1 = new Demeter(game, game.getP1());</span>
+<span class="fc" id="L28">        md1 = new Minotaur(game, game.getP1());</span>
+<span class="fc" id="L29">        pd1 = new Pan(game, game.getP1());</span>
+<span class="fc" id="L30">        ap1 = new Athena(game, game.getP1());</span>
+<span class="fc" id="L31">        gl1 = new GameLogic(game, game.getP1());</span>
+<span class="fc" id="L32">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

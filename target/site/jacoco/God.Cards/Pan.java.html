@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pan.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">God.Cards</a> &gt; <span class="el_source">Pan.java</span></div><h1>Pan.java</h1><pre class="source lang-java linenums">package God.Cards;
+
+import GameBoard.Tile;
+import GameSystem.Game;
+import God.AbstractGod;
+import God.CardLogic;
+import Player.Player;
+import Player.Worker;
+
+public class Pan extends AbstractGod {
+
+    private boolean panFlag;
+
+    // constructor
+    /**
+     * Pan Constructor (arg)
+     *
+     */
+    public Pan(Game game, Player p) {
+<span class="fc" id="L20">        super(game, p);</span>
+<span class="fc" id="L21">        this.panFlag = false;</span>
+<span class="fc" id="L22">    }</span>
+
+    // Getters
+    /**
+     * Getter method for the pan flag.
+     *
+     * @return boolean value of the pan flag
+     */
+    public boolean getPanFlag() {
+<span class="fc" id="L31">        return this.panFlag;</span>
+    }
+
+    // methods
+
+    // BUILD
+    /**
+     * Builds/Adds a &quot;tower&quot; onto the tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param id the id of the player
+     * @return boolean of whether the build succeeded
+     */
+    @Override
+    public boolean buildTower(int x, int y, int id) {
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if(this.buildHelper(x, y, id)) {</span>
+<span class="fc" id="L48">            game.switchCurrentPlayer();</span>
+<span class="fc" id="L49">            return true;</span>
+        }
+<span class="nc" id="L51">        return false;</span>
+    }
+
+    // MOVE
+    /**
+     * Moves a worker to another tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be moved
+     * @return boolean of whether the move succeeded
+     */
+    @Override // MODIFIED
+    public boolean relocateWorker(int x, int y, int workerId) {
+<span class="fc" id="L65">        Tile oldTile = p.findCurrentTile(workerId);</span>
+<span class="fc" id="L66">        int oldLevel = oldTile.getCurrentLevel();</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (this.relocateHelper(x, y, workerId)) {</span>
+<span class="fc" id="L68">            Worker w = p.getWorker(workerId);</span>
+<span class="fc" id="L69">            Tile t = game.retrieveTile(x, y);</span>
+<span class="fc" id="L70">            p.changeWorkerTile(w, t);</span>
+<span class="fc" id="L71">            int tLevel = t.getCurrentLevel();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (oldLevel - tLevel &gt;= 2) { this.panFlag = true; }</span>
+<span class="fc" id="L73">            return true;</span>
+        }
+<span class="fc" id="L75">        return false;</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be relocated to.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    @Override
+    public boolean tileCheck(Tile other, int id) {
+<span class="fc" id="L87">        Tile t = p.findCurrentTile(id);</span>
+<span class="pc bpc" id="L88" title="3 of 4 branches missed.">        if (athena &amp;&amp; other.getCurrentLevel() &gt; t.getCurrentLevel()) {</span>
+<span class="nc" id="L89">            System.out.println(&quot;Cannot traverse to higher level due to Athena perk&quot;);</span>
+<span class="nc" id="L90">            return false;</span>
+        }
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (t.getCurrentLevel() &lt; other.getCurrentLevel()) {</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;</span>
+        }
+//        if (other.currentLevel == 4) return false;
+<span class="fc" id="L96">        return tileBuildCheck(other, id);</span>
+    }
+
+    // GAME STATE
+    /**
+     * At any given point in the game, determines the winner- or returns null if there is no winner.
+     *
+     * @param cl the opposing card logic
+     * @return Player the winning player
+     */
+    @Override // MODIFIED
+    public Player getWinner(CardLogic cl) {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (this.panFlag) {</span>
+<span class="fc" id="L109">            System.out.println(&quot;Player &quot; + p.toString() + &quot; has won due to dropping 2 levels with the Pan perk!&quot;);</span>
+<span class="fc" id="L110">            System.out.println(&quot;Player &quot; + other.toString() + &quot; has lost the match :(&quot;);</span>
+<span class="fc" id="L111">            return p;</span>
+        }
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (isValidGame(cl)) return null;</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (isPlayerStuck()) {</span>
+<span class="nc" id="L115">            loser();</span>
+<span class="nc" id="L116">            return other;</span>
+        }
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (p.isWinner()) {</span>
+<span class="nc" id="L119">            winner();</span>
+<span class="nc" id="L120">            return p;</span>
+        }
+<span class="nc" id="L122">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

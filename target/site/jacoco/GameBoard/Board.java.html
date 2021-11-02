@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Board.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">GameBoard</a> &gt; <span class="el_source">Board.java</span></div><h1>Board.java</h1><pre class="source lang-java linenums">package GameBoard;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Board {
+
+    private final List&lt;Tile&gt; tileList;
+
+    // constructor
+    /**
+     * Game Board Constructor (no arg)
+     *
+     */
+<span class="fc" id="L15">    public Board() {</span>
+<span class="fc" id="L16">        this.tileList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        for (int i = 0; i &lt; 5 ; i++) {</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">            for (int j = 0; j &lt; 5; j++) {</span>
+<span class="fc" id="L19">                this.tileList.add(new Tile(i, j));</span>
+            }
+        }
+<span class="fc" id="L22">    }</span>
+
+    // getters
+    /**
+     * Getter method for retrieving tiles on the current board.
+     *
+     * @return A list of the tiles currently on the board
+     */
+    public List&lt;Tile&gt; getTileList() {
+<span class="fc" id="L31">        return this.tileList;</span>
+    }
+
+    /**
+     * Getter method for retrieving a single tile on the current board.
+     *
+     * @param x the x coordinate of the tile to be retrieved
+     * @param y the y coordinate of the tile to be retrieved
+     * @return the tile found based on the coordinates given
+     */
+    public Tile getTile(int x, int y) {
+<span class="fc" id="L42">        return this.tileList.get(translate(x, y));</span>
+    }
+
+    // methods
+
+    /**
+     * Resets the game board by resetting every tile.
+     *
+     */
+    public void resetBoard() {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (Tile t : this.tileList) {</span>
+<span class="fc" id="L53">            t.resetTile();</span>
+<span class="fc" id="L54">        }</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Drops a worker on a select tile prior to the start of the game
+     *
+     * @param x the x coordinate of the test tile
+     * @param y the y coordinate of the test tile
+     * @return boolean of whether the worker has been successfully dropped on the selected tile
+     */
+    public boolean initDrop(int x, int y) {
+<span class="fc" id="L65">        Tile t = getTile(x, y);</span>
+        // make sure there are no buildings, no other players in that spot
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (t.getHasWorker()) {</span>
+<span class="fc" id="L68">            System.out.println(&quot;This tile already has another worker&quot;);</span>
+<span class="fc" id="L69">            return false;</span>
+        }
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (Tile tile : this.getTileList()) {</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (tile.getCurrentLevel() != 0) {</span>
+<span class="fc" id="L73">                System.out.println(&quot;Game already started! Cannot drop worker&quot;);</span>
+<span class="fc" id="L74">                return false;</span>
+            }
+<span class="fc" id="L76">        }</span>
+<span class="fc" id="L77">        t.jumped();</span>
+<span class="fc" id="L78">        return true;</span>
+    }
+
+    // helpers
+    /**
+     * Private helper method that gets the tile from the tile list.
+     *
+     * @param x the x value in the array
+     * @param y the y value in the array
+     * @return int- the index position of that tile in the tile array
+     */
+<span class="fc" id="L89">    private int translate(int x, int y) { return x * 5 + y; }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

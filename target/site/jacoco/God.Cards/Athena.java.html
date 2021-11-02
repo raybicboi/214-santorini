@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Athena.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">God.Cards</a> &gt; <span class="el_source">Athena.java</span></div><h1>Athena.java</h1><pre class="source lang-java linenums">package God.Cards;
+
+import GameBoard.Tile;
+import GameSystem.Game;
+import God.AbstractGod;
+import God.CardLogic;
+import Player.Player;
+import Player.Worker;
+
+public class Athena extends AbstractGod {
+
+    // constructor
+    /**
+     * Athena Constructor (arg)
+     *
+     */
+    public Athena(Game game, Player p) {
+<span class="fc" id="L18">        super(game, p);</span>
+<span class="fc" id="L19">    }</span>
+
+    // methods
+
+    // BUILD
+    /**
+     * Builds/Adds a &quot;tower&quot; onto the tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param id the id of the worker
+     * @return boolean of whether the build succeeded
+     */
+    @Override
+    public boolean buildTower(int x, int y, int id) {
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if(this.buildHelper(x, y, id)) {</span>
+<span class="fc" id="L35">            game.switchCurrentPlayer();</span>
+<span class="fc" id="L36">            return true;</span>
+        }
+<span class="nc" id="L38">        return false;</span>
+    }
+
+    // MOVE MODIFIED
+    /**
+     * Moves a worker to another tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be moved
+     * @return boolean of whether the move succeeded
+     */
+    @Override
+    public boolean relocateWorker(int x, int y, int workerId) { // what if there are two athena?
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (this.relocateHelper(x, y, workerId)) {</span>
+<span class="fc" id="L53">            Tile original = p.findCurrentTile(workerId);</span>
+
+<span class="fc" id="L55">            Worker w = p.getWorker(workerId);</span>
+<span class="fc" id="L56">            Tile t = game.retrieveTile(x, y);</span>
+<span class="fc" id="L57">            p.changeWorkerTile(w, t);</span>
+
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            if (isHigher(original, t)) athena = true;</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            else if (!isHigher(original, t)) athena = false;</span>
+<span class="fc" id="L61">            return true;</span>
+        }
+<span class="fc" id="L63">        return false;</span>
+    }
+
+    /**
+     * Helper method that determines if Athena moved up.
+     *
+     * @param oldTile the original Tile
+     * @param newTile the tile moved to
+     * @return boolean of whether the worker moved to a higher level
+     */
+    // NEW METHOD
+    public boolean isHigher(Tile oldTile, Tile newTile) {
+<span class="fc" id="L75">        int oldLevel = oldTile.getCurrentLevel();</span>
+<span class="fc" id="L76">        int newLevel = newTile.getCurrentLevel();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        return newLevel &gt; oldLevel;</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be relocated to.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    @Override
+    public boolean tileCheck(Tile other, int id) {
+<span class="fc" id="L89">        Tile t = p.findCurrentTile(id);</span>
+<span class="fc bfc" id="L90" title="All 4 branches covered.">        if (athena &amp;&amp; other.getCurrentLevel() &gt; t.getCurrentLevel()) {</span>
+<span class="fc" id="L91">            System.out.println(&quot;Cannot traverse to higher level due to Athena perk&quot;);</span>
+<span class="fc" id="L92">            return false;</span>
+        }
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (t.getCurrentLevel() &lt; other.getCurrentLevel()) {</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">            if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;</span>
+        }
+//        if (other.currentLevel == 4) return false;
+<span class="fc" id="L98">        return tileBuildCheck(other, id);</span>
+    }
+
+    // GAME STATE
+    /**
+     * At any given point in the game, determines the winner- or returns null if there is no winner.
+     *
+     * @param cl the opposing card logic
+     * @return Player the winning player
+     */
+    @Override
+    public Player getWinner(CardLogic cl) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (isValidGame(cl)) return null;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (isPlayerStuck()) {</span>
+<span class="nc" id="L112">            loser();</span>
+<span class="nc" id="L113">            return other;</span>
+        }
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (p.isWinner()) {</span>
+<span class="nc" id="L116">            winner();</span>
+<span class="nc" id="L117">            return p;</span>
+        }
+<span class="nc" id="L119">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

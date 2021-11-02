@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">Player</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package Player;
+
+import GameBoard.Tile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Player {
+
+    private final List&lt;Worker&gt; workerList;
+    private final int playerId;
+
+    // constructor
+    /**
+     * Player Constructor
+     *
+     * @param playerId id of player
+     */
+<span class="fc" id="L19">    public Player(int playerId) {</span>
+<span class="fc" id="L20">        this.playerId = playerId;</span>
+<span class="fc" id="L21">        this.workerList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        for (int i = 0; i &lt; 2; i++) {</span>
+<span class="fc" id="L23">            this.workerList.add(new Worker(i));</span>
+        }
+<span class="fc" id="L25">    }</span>
+
+    // setter method
+    
+    // getter method
+    /**
+     * Getter method that returns the list of workers associated with the player.
+     *
+     * @return List&lt;Worker&gt; the list of workers
+     */
+    public List&lt;Worker&gt; getWorkerList() {
+<span class="fc" id="L36">        return this.workerList;</span>
+    }
+
+    /**
+     * Getter method that allows access to a specific worker belonging to a player based on their worker ID.
+     *
+     * @params i the worker id to be passed
+     * @return Worker the worker requested
+     */
+    public Worker getWorker(int i) {
+<span class="fc" id="L46">        return this.workerList.get(i);</span>
+    }
+
+    /**
+     * Getter method that returns the id of the player.
+     *
+     * @return int the id of the player
+     */
+    public int getPlayerId() {
+<span class="fc" id="L55">        return this.playerId;</span>
+    }
+
+    // methods
+    /**
+     * Change the current worker's current tile spot.
+     *
+     * @param w the worker to be set
+     * @param t the tile to set the worker on
+     */
+    public void changeWorkerTile(Worker w, Tile t) {
+<span class="fc" id="L66">        w.setCurrentTile(t);</span>
+<span class="fc" id="L67">    }</span>
+
+    /**
+     * Helper method that determines if a player reached third tower level.
+     *
+     * @return boolean of whether the player reached the third level
+     */
+    public boolean isWinner() {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Worker w : this.getWorkerList()) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (w.reachedThird()) return true;</span>
+<span class="fc" id="L77">        }</span>
+<span class="fc" id="L78">        return false;</span>
+    }
+
+    /**
+     * Helper method that resets the current tile of both workers.
+     *
+     */
+    public void clearPlayer() {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        for (Worker w : this.getWorkerList()) {</span>
+<span class="fc" id="L87">            w.setCurrentTile();</span>
+<span class="fc" id="L88">        }</span>
+<span class="fc" id="L89">    }</span>
+
+    /**
+     * Helper method that finds if a worker is currently on a tile.
+     *
+     * @param id id of the worker
+     * @return boolean whether the worker is currently on a tile
+     */
+    public boolean checkWorkerNull(int id) {
+<span class="fc" id="L98">        Worker w = getWorker(id);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        return w.getCurrentTile() == null;</span>
+    }
+
+    /**
+     * Private helper method that finds the current tile of a worker.
+     *
+     * @param id the id of the player
+     * @return Tile the current tile
+     */
+    public Tile findCurrentTile(int id) {
+<span class="fc" id="L109">        Worker w = this.getWorker(id);</span>
+<span class="fc" id="L110">        return w.getCurrentTile();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

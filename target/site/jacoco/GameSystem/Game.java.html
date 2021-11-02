@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">GameSystem</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package GameSystem;
+
+import GameBoard.Board;
+import GameBoard.Tile;
+import Player.Player;
+import Player.Worker;
+
+public class Game {
+
+    private Player currentPlayer;
+    private final Board gameBoard;
+    private final Player p0;
+    private final Player p1;
+
+    // arg constructor
+    /**
+     * Game Constructor (no arg)
+     *
+     */
+<span class="fc" id="L20">    public Game() {</span>
+<span class="fc" id="L21">        this.p0 = new Player(0);</span>
+<span class="fc" id="L22">        this.p1 = new Player(1);</span>
+<span class="fc" id="L23">        this.gameBoard = new Board();</span>
+<span class="fc" id="L24">        this.currentPlayer = this.getP0();</span>
+<span class="fc" id="L25">    }</span>
+
+    // setter method
+    /**
+     * Switches the current player when the turn ends.
+     *
+     */
+    public void switchCurrentPlayer() {
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (this.currentPlayer == this.p0) { this.currentPlayer = this.p1; }</span>
+<span class="fc" id="L34">        else { this.currentPlayer = this.p0; }</span>
+<span class="fc" id="L35">    }</span>
+
+    // getter method
+    /**
+     * Getter method for retrieving the board associated with the game.
+     *
+     * @return Board the board
+     */
+    public Board getGameBoard() {
+<span class="fc" id="L44">        return this.gameBoard;</span>
+    }
+
+    /**
+     * Getter method for retrieving player 0.
+     *
+     * @return Player the player
+     */
+<span class="fc" id="L52">    public Player getP0() { return this.p0; }</span>
+
+    /**
+     * Getter method for retrieving player 1.
+     *
+     * @return Player the player
+     */
+<span class="fc" id="L59">    public Player getP1() { return this.p1; }</span>
+
+    /**
+     * Getter method for retrieving the current player whose turn it is to move.
+     *
+     * @return Player the player
+     */
+<span class="fc" id="L66">    public Player getCurrentPlayer() { return this.currentPlayer; }</span>
+
+    /**
+     * Drops a worker onto the game board.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be dropped
+     * @param p the player associated with the worker to be dropped
+     * @return boolean of whether the drop succeeded
+     */
+    public boolean dropWorker(int x, int y, int workerId, Player p) {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (!p.checkWorkerNull(workerId)) {</span>
+<span class="fc" id="L79">            System.out.println(&quot;Worker is already on another tile&quot;);</span>
+<span class="fc" id="L80">            return false;</span>
+        }
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (this.gameBoard.initDrop(x, y)) {</span>
+<span class="fc" id="L83">            Tile t = this.gameBoard.getTile(x, y);</span>
+            Worker w;
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (p == this.p0) {</span>
+<span class="fc" id="L86">                w = this.p0.getWorker(workerId);</span>
+<span class="fc" id="L87">                p0.changeWorkerTile(w, t);</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            } else if (p == this.p1) {</span>
+<span class="fc" id="L89">                w = this.p1.getWorker(workerId);</span>
+<span class="fc" id="L90">                p1.changeWorkerTile(w, t);</span>
+            }
+<span class="fc" id="L92">            return true;</span>
+        }
+<span class="fc" id="L94">        return false;</span>
+    }
+
+    /**
+     * Getter method for retrieving a single tile from the current Game.
+     *
+     * @param x the x coordinate of the tile to be retrieved
+     * @param y the y coordinate of the tile to be retrieved
+     * @return the tile found based on the coordinates given
+     */
+    public Tile retrieveTile(int x, int y) {
+<span class="fc" id="L105">        return this.getGameBoard().getTile(x, y);</span>
+    }
+
+    /**
+     * Resets the game board to its original state.
+     *
+     */
+    public void resetGameBoard() {
+<span class="fc" id="L113">        this.gameBoard.resetBoard();</span>
+<span class="fc" id="L114">        this.p0.clearPlayer();</span>
+<span class="fc" id="L115">        this.p1.clearPlayer();</span>
+<span class="fc" id="L116">    }</span>
+
+    // helper method
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,15 @@
+GameSystem\GameLogic.class
+App.class
+God\AbstractGod.class
+GameBoard\Tile.class
+GameBoard\Board.class
+God\Cards\Pan.class
+GameSystem\Game.class
+Testing\GodSetupTest.class
+Testing\SetupTest.class
+God\CardLogic.class
+God\Cards\Demeter.class
+God\Cards\Minotaur.class
+Player\Player.class
+God\Cards\Athena.class
+Player\Worker.class

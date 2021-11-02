@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Minotaur.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">God.Cards</a> &gt; <span class="el_source">Minotaur.java</span></div><h1>Minotaur.java</h1><pre class="source lang-java linenums">package God.Cards;
+
+import GameBoard.Tile;
+import GameSystem.Game;
+import God.AbstractGod;
+import God.CardLogic;
+import Player.Player;
+import Player.Worker;
+
+public class Minotaur extends AbstractGod {
+
+    // constructor
+    /**
+     * Minotaur Constructor (arg)
+     *
+     */
+    public Minotaur(Game game, Player p) {
+<span class="fc" id="L18">        super(game, p);</span>
+<span class="fc" id="L19">    }</span>
+
+    // methods
+
+    // BUILD
+    /**
+     * Builds/Adds a &quot;tower&quot; onto the tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param id the id of the worker
+     * @return boolean of whether the build succeeded
+     */
+    @Override
+    public boolean buildTower(int x, int y, int id) {
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if(this.buildHelper(x, y, id)) {</span>
+<span class="nc" id="L35">            game.switchCurrentPlayer();</span>
+<span class="nc" id="L36">            return true;</span>
+        }
+<span class="nc" id="L38">        return false;</span>
+    }
+
+    // MOVE
+    /**
+     * Moves a worker to another tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be moved
+     * @return boolean of whether the move succeeded
+     */
+    @Override
+    public boolean relocateWorker(int x, int y, int workerId) {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (this.relocateHelper(x, y, workerId)) {</span>
+<span class="fc" id="L53">            Worker w = p.getWorker(workerId);</span>
+<span class="fc" id="L54">            Tile t = game.retrieveTile(x, y);</span>
+<span class="fc" id="L55">            p.changeWorkerTile(w, t);</span>
+<span class="fc" id="L56">            athena = false;</span>
+<span class="fc" id="L57">            return true;</span>
+        }
+<span class="fc" id="L59">        return false;</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be relocated to.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    @Override // MODIFIED
+    public boolean tileCheck(Tile other, int id) {
+<span class="fc" id="L71">        Tile t = p.findCurrentTile(id);</span>
+<span class="pc bpc" id="L72" title="3 of 4 branches missed.">        if (athena &amp;&amp; other.getCurrentLevel() &gt; t.getCurrentLevel()) {</span>
+<span class="nc" id="L73">            System.out.println(&quot;Cannot traverse to higher level due to Athena perk&quot;);</span>
+<span class="nc" id="L74">            return false;</span>
+        }
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (t.getCurrentLevel() &lt; other.getCurrentLevel()) {</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;</span>
+        }
+//        if (other.currentLevel == 4) return false;
+<span class="fc" id="L80">        return tileMinCheck(other, id);</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be moved to.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    private boolean tileMinCheck(Tile other, int id) { // NEW METHOD
+<span class="fc" id="L91">        Tile t = p.findCurrentTile(id);</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (t.getX() == other.getX() &amp;&amp;</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                t.getY() == other.getY()) return false;</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (!withinOne(t.getX(), other.getX())) return false;</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (!withinOne(t.getY(), other.getY())) return false;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        for (Worker w : this.other.getWorkerList()) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            if (w.getCurrentTile() == other) {</span>
+<span class="fc" id="L98">                int wid = w.getWorkerId();</span>
+<span class="fc" id="L99">                int otherX = other.getX();</span>
+<span class="fc" id="L100">                int otherY = other.getY();</span>
+<span class="fc" id="L101">                int thisX = t.getX();</span>
+<span class="fc" id="L102">                int thisY = t.getY();</span>
+
+<span class="fc bfc" id="L104" title="All 6 branches covered.">                if (otherX - thisX == 1 &amp;&amp; otherY == thisY &amp;&amp; otherX &lt;= 3) {</span>
+<span class="fc" id="L105">                    return relocateOpposite(otherX + 1, otherY, wid);</span>
+<span class="pc bpc" id="L106" title="5 of 6 branches missed.">                } else if (thisX - otherX == 1 &amp;&amp; otherY == thisY &amp;&amp; otherX &gt;= 1) {</span>
+<span class="nc" id="L107">                    return relocateOpposite(otherX - 1, otherY, wid);</span>
+<span class="pc bpc" id="L108" title="5 of 6 branches missed.">                } else if (otherY - thisY == 1 &amp;&amp; otherX == thisX &amp;&amp; otherY &lt;= 3) {</span>
+<span class="nc" id="L109">                    return relocateOpposite(otherX, otherY + 1, wid);</span>
+<span class="pc bpc" id="L110" title="1 of 6 branches missed.">                } else if (thisY - otherY == 1 &amp;&amp; otherX == thisX &amp;&amp; otherY &gt;= 1) {</span>
+<span class="fc" id="L111">                    return relocateOpposite(otherX, otherY - 1, wid);</span>
+                }
+            }
+<span class="fc" id="L114">        }</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (other.getHasWorker()) return false;</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        return other.getCurrentLevel() &lt; 4;</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be moved to.
+     *
+     * @param x - the x coordinate of the tile
+     * @param y - the y coordinate of the tile
+     * @param workerId the id of the worker
+     * @return boolean of whether the minotaur &quot;push&quot; has succeeded
+     */
+    private boolean relocateOpposite(int x, int y, int workerId) { // NEW METHOD
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (this.relocateHelperOpposite(x, y, workerId)) {</span>
+<span class="fc" id="L129">            Worker w = other.getWorker(workerId);</span>
+<span class="fc" id="L130">            Tile t = game.retrieveTile(x, y);</span>
+<span class="fc" id="L131">            other.changeWorkerTile(w, t);</span>
+<span class="fc" id="L132">            return true;</span>
+        }
+<span class="fc" id="L134">        return false;</span>
+    }
+
+    /**
+     * Allows the opposite worker to move tiles, if permitted.
+     *
+     * @param x the x coordinate of the test tile
+     * @param y the y coordinate of the test tile
+     * @param id the id of the worker
+     * @return boolean of whether the worker has successfully moved
+     */
+    private boolean relocateHelperOpposite(int x, int y, int id) { // NEW METHOD
+<span class="fc" id="L146">        Tile t = game.retrieveTile(x, y);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (!this.isLegalMoveTileOpposite(t, id)) {</span>
+<span class="fc" id="L148">            System.out.println(&quot;Cannot move to this tile!&quot;);</span>
+<span class="fc" id="L149">            return false;</span>
+        }
+<span class="fc" id="L151">        Tile old = other.findCurrentTile(id);</span>
+<span class="fc" id="L152">        old.jumped();</span>
+<span class="fc" id="L153">        t.jumped();</span>
+<span class="fc" id="L154">        return true;</span>
+    }
+
+    /**
+     * Sees if the worker to be pushed can move from their current tile to a select tile.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    private boolean isLegalMoveTileOpposite(Tile other, int id) { // NEW METHOD
+<span class="fc" id="L165">        Tile t = this.other.findCurrentTile(id);</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (t == null) { return false; }</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        if (other.getHasWorker()) { return false; }</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        return other.getCurrentLevel() &lt; 4;</span>
+    }
+
+    // GAME STATE
+    /**
+     * At any given point in the game, determines the winner- or returns null if there is no winner.
+     *
+     * @param cl the opposing god card logic
+     * @return Player the winning player
+     */
+    @Override
+    public Player getWinner(CardLogic cl) {
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (isValidGame(cl)) return null;</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (isPlayerStuck()) {</span>
+<span class="nc" id="L182">            loser();</span>
+<span class="nc" id="L183">            return other;</span>
+        }
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (p.isWinner()) {</span>
+<span class="nc" id="L186">            winner();</span>
+<span class="nc" id="L187">            return p;</span>
+        }
+<span class="nc" id="L189">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

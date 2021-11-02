@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">GameBoard</a> &gt; <span class="el_source">Tile.java</span></div><h1>Tile.java</h1><pre class="source lang-java linenums">package GameBoard;
+
+public class Tile {
+
+    private final int x;
+    private final int y;
+    private int currentLevel; // consider attaching a Tower object instead of current level
+    private boolean hasWorker;
+
+    // arg constructor
+    /**
+     * Tile Constructor
+     *
+     * @param x coordinate of the tile
+     * @param y coordinate of the tile
+     */
+<span class="fc" id="L17">    public Tile(int x, int y) {</span>
+<span class="fc" id="L18">        this.x = x;</span>
+<span class="fc" id="L19">        this.y = y;</span>
+<span class="fc" id="L20">        this.currentLevel = 0;</span>
+<span class="fc" id="L21">        this.hasWorker = false;</span>
+<span class="fc" id="L22">    }</span>
+
+    // setter methods
+    /**
+     * Builds/Adds a &quot;tower&quot; onto the tile.
+     *
+     */
+    public void build() {
+<span class="fc" id="L30">        this.currentLevel += 1;</span>
+//        return true;
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * Toggles the has worker flag.
+     *
+     */
+    public void jumped() {
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        this.hasWorker = !this.hasWorker;</span>
+//        return true;
+<span class="fc" id="L41">    }</span>
+
+    // getter methods
+    /**
+     * Getter method for the x coordinate.
+     *
+     * @return the x coordinate of the tile
+     */
+    public int getX() {
+<span class="fc" id="L50">        return this.x;</span>
+    }
+
+    /**
+     * Getter method for the y coordinate.
+     *
+     * @return the y coordinate of the tile
+     */
+    public int getY() {
+<span class="fc" id="L59">        return this.y;</span>
+    }
+
+    /**
+     * Getter method for the current tower height.
+     *
+     * @return the tower height
+     */
+    public int getCurrentLevel() {
+<span class="fc" id="L68">        return this.currentLevel;</span>
+    }
+
+    /**
+     * Getter method for the has worker flag.
+     *
+     * @return whether the tile current has a worker
+     */
+    public boolean getHasWorker() {
+<span class="fc" id="L77">        return this.hasWorker;</span>
+    }
+
+    // methods
+    /**
+     * Resets the tile to its initial state.
+     *
+     */
+    public void resetTile() {
+<span class="fc" id="L86">        this.currentLevel = 0;</span>
+<span class="fc" id="L87">        this.hasWorker = false;</span>
+<span class="fc" id="L88">    }</span>
+
+    // helper methods
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

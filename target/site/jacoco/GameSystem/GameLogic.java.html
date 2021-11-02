@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameLogic.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">GameSystem</a> &gt; <span class="el_source">GameLogic.java</span></div><h1>GameLogic.java</h1><pre class="source lang-java linenums">package GameSystem;
+
+import GameBoard.Tile;
+import God.CardLogic;
+import Player.Player;
+import Player.Worker;
+
+public class GameLogic implements CardLogic {
+
+    private final Player p;
+    private final Player other;
+    private final Game game;
+
+    // constructor
+    /**
+     * GameLogic Constructor (arg)
+     *
+     */
+<span class="fc" id="L19">    public GameLogic(Game game, Player p) {</span>
+<span class="fc" id="L20">        this.game = game;</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (p == game.getP0()) {</span>
+<span class="fc" id="L22">            this.p = game.getP0();</span>
+<span class="fc" id="L23">            this.other = game.getP1();</span>
+        } else {
+<span class="fc" id="L25">            this.p = game.getP1();</span>
+<span class="fc" id="L26">            this.other = game.getP0();</span>
+        }
+<span class="fc" id="L28">    }</span>
+
+    public Player getOther() {
+<span class="nc" id="L31">        return this.other;</span>
+    }
+    // methods
+
+    // BUILD
+    /**
+     * Builds/Adds a &quot;tower&quot; onto the tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param id the id of the worker
+     * @return boolean of whether the build succeeded
+     */
+    public boolean buildTower(int x, int y, int id) {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if(this.buildHelper(x, y, id)) {</span>
+<span class="fc" id="L46">            game.switchCurrentPlayer();</span>
+<span class="fc" id="L47">            return true;</span>
+        }
+<span class="fc" id="L49">        return false;</span>
+    }
+
+    /**
+     * Builds/Adds a &quot;tower&quot; onto the tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param id the id of the worker
+     * @return boolean of whether the build succeeded
+     */
+    public boolean buildHelper(int x, int y, int id) {
+<span class="fc" id="L61">        Tile t = game.retrieveTile(x, y);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!this.isLegalBuildTile(t, id)) {</span>
+<span class="fc" id="L63">            System.out.println(&quot;Cannot build on this tile!&quot;);</span>
+<span class="fc" id="L64">            return false;</span>
+        }
+<span class="fc" id="L66">        t.build();</span>
+<span class="fc" id="L67">        return true;</span>
+    }
+
+    /**
+     * Sees if a worker can build on a select tile from its current location.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal build
+     */
+    public boolean isLegalBuildTile(Tile other, int id) {
+<span class="fc" id="L78">        Tile t = p.findCurrentTile(id);</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (t != null) { return this.tileBuildCheck(other, id); }</span>
+<span class="nc" id="L80">        return false;</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be built on.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    public boolean tileBuildCheck(Tile other, int id) {
+<span class="fc" id="L91">        Tile t = p.findCurrentTile(id);</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (t.getX() == other.getX() &amp;&amp;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                t.getY() == other.getY()) return false;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (!withinOne(t.getX(), other.getX())) return false;</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (!withinOne(t.getY(), other.getY())) return false;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (other.getHasWorker()) return false;</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        return other.getCurrentLevel() &lt; 4;</span>
+    }
+
+    // MOVE
+    /**
+     * Moves a worker to another tile.
+     *
+     * @param x the x coordinate of the chosen tile
+     * @param y the y coordinate of the chosen tile
+     * @param workerId id of the worker to be moved
+     * @return boolean of whether the move succeeded
+     */
+    @Override
+    public boolean relocateWorker(int x, int y, int workerId) {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (this.relocateHelper(x, y, workerId)) {</span>
+<span class="fc" id="L112">            Worker w = p.getWorker(workerId);</span>
+<span class="fc" id="L113">            Tile t = game.retrieveTile(x, y);</span>
+<span class="fc" id="L114">            p.changeWorkerTile(w, t);</span>
+<span class="fc" id="L115">            return true;</span>
+        }
+<span class="fc" id="L117">        return false;</span>
+    }
+
+    /**
+     * Allows the worker to move tiles, if permitted.
+     *
+     * @param x the x coordinate of the test tile
+     * @param y the y coordinate of the test tile
+     * @param id the id of the worker
+     * @return boolean of whether the worker has successfully moved
+     */
+    public boolean relocateHelper(int x, int y, int id) {
+<span class="fc" id="L129">        Tile t = game.retrieveTile(x, y);</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (!this.isLegalMoveTile(t, id)) {</span>
+<span class="fc" id="L131">            System.out.println(&quot;Cannot move to this tile!&quot;);</span>
+<span class="fc" id="L132">            return false;</span>
+        }
+<span class="fc" id="L134">        Tile old = p.findCurrentTile(id);</span>
+<span class="fc" id="L135">        old.jumped();</span>
+<span class="fc" id="L136">        t.jumped();</span>
+<span class="fc" id="L137">        return true;</span>
+    }
+
+    /**
+     * Sees if a worker can move from their current tile to a select tile.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    public boolean isLegalMoveTile(Tile other, int id) {
+<span class="fc" id="L148">        Tile t = p.findCurrentTile(id);</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (t != null) { return this.tileCheck(other, id); }</span>
+<span class="nc" id="L150">        return false;</span>
+    }
+
+    /**
+     * Private helper method that tests if another tile can be relocated to.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move
+     */
+    public boolean tileCheck(Tile other, int id) {
+<span class="fc" id="L161">        Tile t = p.findCurrentTile(id);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (t.getCurrentLevel() &lt; other.getCurrentLevel()) {</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">            if (!withinOne(t.getCurrentLevel(), other.getCurrentLevel())) return false;</span>
+        }
+//        if (other.currentLevel == 4) return false;
+<span class="fc" id="L166">        return tileBuildCheck(other, id);</span>
+    }
+
+    // GAME STATE
+    /**
+     * At any given point in the game, determines the winner- or returns null if there is no winner.
+     *
+     * @param cl the opposing card logic
+     * @return Player the winning player
+     */
+    @Override
+    public Player getWinner(CardLogic cl) {
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (isValidGame(cl)) return null;</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (isPlayerStuck()) {</span>
+<span class="fc" id="L180">            loser();</span>
+<span class="fc" id="L181">            return other;</span>
+        }
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (p.isWinner()) {</span>
+<span class="fc" id="L184">            winner();</span>
+<span class="fc" id="L185">            return p;</span>
+        }
+<span class="nc" id="L187">        return null;</span>
+    }
+
+    /**
+     * Checks if the game state is valid.
+     *
+     * @param cl the opposing card logic
+     * @return boolean of whether the game is still going
+     */
+    public boolean isValidGame(CardLogic cl) {
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        if (isPlayerStuck()) return false;</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (cl.isPlayerStuck()) return false;</span>
+<span class="pc bpc" id="L199" title="1 of 4 branches missed.">        return !p.isWinner() &amp;&amp; !other.isWinner();</span>
+    }
+
+    /**
+     * Helper method that determines if a player cannot make a move.
+     *
+     * @return boolean of whether the player can make a move
+     */
+    public boolean isPlayerStuck() {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        for (Worker w : p.getWorkerList()) {</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            if (!isStuck(w.getWorkerId())) return false;</span>
+<span class="fc" id="L210">        }</span>
+<span class="fc" id="L211">        return true;</span>
+    }
+
+    /**
+     * Helper function that determines if the worker cannot move to another space.
+     *
+     * @param id the id of the worker
+     * @return boolean of whether the worker can move
+     */
+    public boolean isStuck(int id) {
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        for (Tile t : game.getGameBoard().getTileList()) {</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">            if (isValidTile(t, id)) return false;</span>
+<span class="fc" id="L223">        }</span>
+<span class="fc" id="L224">        return true;</span>
+    }
+
+    /**
+     * Sees if a worker can perform either move or build operation on a select tile.
+     *
+     * @param other - the other tile to be tested
+     * @param id the id of the worker
+     * @return boolean of whether 'other' is a legal move or build
+     */
+    public boolean isValidTile(Tile other, int id) {
+<span class="fc" id="L235">        Tile t = p.findCurrentTile(id);</span>
+<span class="pc bpc" id="L236" title="1 of 6 branches missed.">        if (t != null) {return (this.isLegalBuildTile(other, id) &amp;&amp; this.isLegalMoveTile(other, id));}</span>
+<span class="nc" id="L237">        return false;</span>
+    }
+
+    // OTHER HELPERS
+    /**
+     * Private helper that prints a message for the losing player.
+     *
+     */
+    public void loser() {
+<span class="fc" id="L246">        System.out.println(&quot;Player &quot; + p.toString() + &quot;has lost the match due to being stuck!&quot;);</span>
+<span class="fc" id="L247">        System.out.println(&quot;Player &quot; + other.toString() + &quot;has won the match :)&quot;);</span>
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Private helper that prints a message for the winning player.
+     *
+     */
+    public void winner() {
+<span class="fc" id="L255">        System.out.println(&quot;Player &quot; + p.toString() + &quot;has won the match due scaling the third level!&quot;);</span>
+<span class="fc" id="L256">        System.out.println(&quot;Player &quot; + other.toString() + &quot;has lost the match :(&quot;);</span>
+<span class="fc" id="L257">    }</span>
+
+    /**
+     * Private helper method that test if two values are within one.
+     *
+     * @param a - First int
+     * @param b - Second int
+     * @return boolean of whether a and b is within 1
+     */
+    public boolean withinOne(int a, int b) {
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        return (Math.abs(a - b) &lt;= 1);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

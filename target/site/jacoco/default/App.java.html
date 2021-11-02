@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Santorini</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">import java.io.IOException;
+import java.util.Map;
+
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import fi.iki.elonen.NanoHTTPD;
+import GameSystem.Game;
+import GameSystem.GameLogic;
+
+public class App extends NanoHTTPD {
+
+    public static void main(String[] args) {
+        try {
+<span class="nc" id="L14">            new App();</span>
+<span class="nc" id="L15">        } catch (IOException ioe) {</span>
+<span class="nc" id="L16">            System.err.println(&quot;Couldn't start server:\n&quot; + ioe);</span>
+<span class="nc" id="L17">        }</span>
+<span class="nc" id="L18">    }</span>
+
+    private Game game;
+    private GameLogic gl0;
+    private GameLogic gl1;
+    private Template template;
+
+    public App() throws IOException {
+<span class="nc" id="L26">        super(8080);</span>
+
+<span class="nc" id="L28">        this.game = new Game();</span>
+<span class="nc" id="L29">        this.gl0 = new GameLogic(game, game.getP0());</span>
+<span class="nc" id="L30">        this.gl0 = new GameLogic(game, game.getP0());</span>
+
+<span class="nc" id="L32">        Handlebars handlebars = new Handlebars();</span>
+<span class="nc" id="L33">        this.template = handlebars.compile(&quot;main&quot;);</span>
+
+<span class="nc" id="L35">        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);</span>
+<span class="nc" id="L36">        System.out.println(&quot;\nRunning! Point your browsers to http://localhost:8080/ \n&quot;);</span>
+<span class="nc" id="L37">    }</span>
+
+    @Override
+    public Response serve(IHTTPSession session) {
+        try {
+<span class="nc" id="L42">            String uri = session.getUri();</span>
+<span class="nc" id="L43">            Map&lt;String, String&gt; params = session.getParms();</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">            if (uri.equals(&quot;/newgame&quot;)) {</span>
+<span class="nc" id="L45">                this.game = new Game();</span>
+            }
+//            else if (uri.equals(&quot;/undo&quot;)) {
+//                this.game = this.game.undo();
+//            } else if (uri.equals(&quot;/play&quot;)) {
+//                this.game = this.game.play(Integer.parseInt(params.get(&quot;x&quot;)), Integer.parseInt(params.get(&quot;y&quot;)));
+//            }
+            // Extract the view-specific data from the game and apply it to the template.
+//            Game gameplay = Game.forGame(this.game);
+<span class="nc" id="L54">            String HTML = this.template.apply(this.game);</span>
+<span class="nc" id="L55">            return newFixedLengthResponse(HTML);</span>
+<span class="nc" id="L56">        } catch (IOException e) {</span>
+<span class="nc" id="L57">            e.printStackTrace();</span>
+<span class="nc" id="L58">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -137,11 +137,11 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <executable>src</executable>
+                    <executable>java</executable>
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>main.App</argument>
+                        <argument>App</argument>
                     </arguments>
                 </configuration>
             </plugin>
