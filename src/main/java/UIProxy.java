@@ -2,6 +2,8 @@ import GameBoard.Board;
 import GameBoard.Tile;
 import GameSystem.GameLogic;
 import God.CardLogic;
+import Player.Player;
+import Player.Worker;
 
 import java.util.Arrays;
 
@@ -15,7 +17,7 @@ public class UIProxy {
         this.cells = cells;
     }
 
-    public static UIProxy forGame(GameLogic game1, GameLogic game2) {
+    public static UIProxy forGame(CardLogic game1, CardLogic game2) {
         Cell[] cells = getCells(game1);
         String instructions = getInstructions(game1, game2);
         return new UIProxy(instructions, cells);
@@ -38,19 +40,20 @@ public class UIProxy {
 
     private static String getInstructions(CardLogic game1, CardLogic game2) {
         String instructions;
+        instructions = "";
         if (game1.getWinner(game2) == game1.getPlayer()) {
             instructions = "Player " + (game1.getPlayer().getPlayerId()) + " has won.";
         } else if (game2.getWinner(game1) == game2.getPlayer()) {
             instructions = "Player " + (game2.getPlayer().getPlayerId()) + " has won.";
-        } else {
-            instructions = "Next turn: Player " +  ".";
+        } else if (game1.getGame().getCurrentPlayer() == game1.getPlayer()) {
+            instructions = "Next turn: Player " +  game1.getPlayer().getPlayerId() + ".";
+        } else if ((game1.getGame().getCurrentPlayer() == game2.getPlayer())) {
+            instructions = "Next turn: Player " +  game2.getPlayer().getPlayerId() + ".";
         }
-//      (game.getPlayer() == Player.PLAYER0 ? "0" : "1")
-//        instructions = "Next turn: Player " +  ".";
         return instructions;
     }
 
-    private static Cell[] getCells(GameLogic game1) {
+    private static Cell[] getCells(CardLogic game1) {
         Cell cells[] = new Cell[25];
         Board board = game1.getGame().getGameBoard();
         for (int x = 0; x <= 4; x++) {
@@ -59,36 +62,35 @@ public class UIProxy {
                 String link = "";
                 String clazz = "";
                 Tile tile = board.getTile(x, y);
-//                Player p = something idk
-                if (tile.getHasWorker() && game1.getPlayer().getPlayerId() == 0) { // add both conditions
-                    text = "player";
-                    clazz = "playable";
-                    link = "/play?x=" + x + "&y=" + y;
-                }
-                else if (tile.getCurrentLevel() == 1)  {
+//                Player curr = game1.getGame().getCurrentPlayer();
+                if (tile.getHasWorker()) {
+                    for (Worker w : game1.getPlayer().getWorkerList()) {
+                        if (w.getCurrentTile() == tile) text = "player 0";
+                    }
+                    for (Worker w : game1.getOther().getWorkerList()) {
+                        if (w.getCurrentTile() == tile) text = "player 1";
+                    }
+                } else if (tile.getCurrentLevel() == 1)  {
                     text = "1";
                     clazz = "playable";
                     link = "/play?x=" + x + "&y=" + y;
-                }
-                else if (tile.getCurrentLevel() == 2) {
+                } else if (tile.getCurrentLevel() == 2) {
                     text = "2";
                     clazz = "playable";
                     link = "/play?x=" + x + "&y=" + y;
-                }
-                else if (tile.getCurrentLevel() == 3) {
+                } else if (tile.getCurrentLevel() == 3) {
                     text = "3";
                     clazz = "playable";
                     link = "/play?x=" + x + "&y=" + y;
-                }
-                else if (tile.getCurrentLevel() == 4) {
+                } else if (tile.getCurrentLevel() == 4) {
                     text = "4";
                     clazz = "playable";
                     link = "/play?x=" + x + "&y=" + y;
+                } else {
+                    clazz = "playable";
+                    link = "/play?x=" + x + "&y=" + y;
                 }
-                else if (tile == null) {
-                    text = "other";
-                }
-                cells[5 * y + x] = new Cell(text, clazz, link);
+                cells[5 * x + y] = new Cell(text, clazz, link);
             }
         }
         return cells;

@@ -12,6 +12,9 @@ public abstract class AbstractGod implements CardLogic {
     public final Player other;
     public final Game game;
 
+    private boolean canMove;
+    private boolean canBuild;
+
     // constructor
     /**
      * GameLogic Constructor (arg)
@@ -40,6 +43,14 @@ public abstract class AbstractGod implements CardLogic {
 
     public Game getGame() {
         return this.game;
+    }
+
+    public boolean getCanMove() {
+        return this.canMove;
+    }
+
+    public boolean getCanBuild() {
+        return this.canBuild;
     }
 
     // methods
@@ -220,8 +231,8 @@ public abstract class AbstractGod implements CardLogic {
      *
      */
     public void loser() {
-        System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
-        System.out.println("Player " + other.toString() + "has won the match :)");
+        System.out.println("Player " + p.getPlayerId() + " has lost the match due to being stuck!");
+        System.out.println("Player " + other.getPlayerId() + " has won the match :)");
     }
 
     /**
@@ -229,8 +240,8 @@ public abstract class AbstractGod implements CardLogic {
      *
      */
     public void winner() {
-        System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
-        System.out.println("Player " + other.toString() + "has lost the match :(");
+        System.out.println("Player " + p.getPlayerId() + " has won the match due scaling the third level!");
+        System.out.println("Player " + other.getPlayerId() + " has lost the match :(");
     }
 
     /**

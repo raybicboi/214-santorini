@@ -59,7 +59,7 @@
 <body>
   <div id="instructions">{{instructions}}</div>
   <div id="board">
-    {{#each gameBoard}}
+    {{#each cells}}
       {{#if link}}
         <a href={{link}}><div class="cell {{clazz}}">{{text}}</div></a>
       {{else}}

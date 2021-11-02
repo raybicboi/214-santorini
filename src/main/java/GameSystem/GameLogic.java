@@ -11,6 +11,9 @@ public class GameLogic implements CardLogic {
     private final Player other;
     private final Game game;
 
+    private boolean canMove;
+    private boolean canBuild;
+
     // constructor
     /**
      * GameLogic Constructor (arg)
@@ -25,6 +28,8 @@ public class GameLogic implements CardLogic {
             this.p = game.getP1();
             this.other = game.getP0();
         }
+        canMove = true;
+        canBuild = false;
     }
 
     // Getters
@@ -40,6 +45,14 @@ public class GameLogic implements CardLogic {
         return this.game;
     }
 
+    public boolean getCanMove() {
+        return this.canMove;
+    }
+
+    public boolean getCanBuild() {
+        return this.canBuild;
+    }
+
     // methods
 
     // BUILD
@@ -52,8 +65,14 @@ public class GameLogic implements CardLogic {
      * @return boolean of whether the build succeeded
      */
     public boolean buildTower(int x, int y, int id) {
+        if (!canBuild) {
+            System.out.println("Time to move");
+            return false;
+        }
         if(this.buildHelper(x, y, id)) {
             game.switchCurrentPlayer();
+            canMove = true;
+            canBuild = false;
             return true;
         }
         return false;
@@ -118,10 +137,16 @@ public class GameLogic implements CardLogic {
      */
     @Override
     public boolean relocateWorker(int x, int y, int workerId) {
+        if (!canMove) {
+            System.out.println("Time to build");
+            return false;
+        }
         if (this.relocateHelper(x, y, workerId)) {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
+            canMove = false;
+            canBuild = true;
             return true;
         }
         return false;
@@ -253,8 +278,8 @@ public class GameLogic implements CardLogic {
      *
      */
     public void loser() {
-        System.out.println("Player " + p.toString() + "has lost the match due to being stuck!");
-        System.out.println("Player " + other.toString() + "has won the match :)");
+        System.out.println("Player " + p.getPlayerId() + " has lost the match due to being stuck!");
+        System.out.println("Player " + other.getPlayerId() + " has won the match :)");
     }
 
     /**
@@ -262,8 +287,8 @@ public class GameLogic implements CardLogic {
      *
      */
     public void winner() {
-        System.out.println("Player " + p.toString() + "has won the match due scaling the third level!");
-        System.out.println("Player " + other.toString() + "has lost the match :(");
+        System.out.println("Player " + p.getPlayerId() + " has won the match due scaling the third level!");
+        System.out.println("Player " + other.getPlayerId() + " has lost the match :(");
     }
 
     /**

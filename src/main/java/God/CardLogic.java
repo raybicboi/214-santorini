@@ -14,6 +14,10 @@ public interface CardLogic {
 
     Game getGame();
 
+    public boolean getCanMove();
+
+    public boolean getCanBuild();
+
     // BUILD
     boolean buildTower(int x, int y, int id);
 
