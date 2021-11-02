@@ -12,8 +12,8 @@ public abstract class AbstractGod implements CardLogic {
     public final Player other;
     public final Game game;
 
-    private boolean canMove;
-    private boolean canBuild;
+    public boolean canMove;
+    public boolean canBuild;
 
     // constructor
     /**
@@ -30,6 +30,8 @@ public abstract class AbstractGod implements CardLogic {
             this.p = game.getP1();
             this.other = game.getP0();
         }
+        canMove = true;
+        canBuild = false;
     }
 
     // Getters

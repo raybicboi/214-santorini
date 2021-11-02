@@ -33,6 +33,8 @@ public class Athena extends AbstractGod {
     public boolean buildTower(int x, int y, int id) {
         if(this.buildHelper(x, y, id)) {
             game.switchCurrentPlayer();
+            canMove = true;
+            canBuild = false;
             return true;
         }
         return false;
@@ -55,6 +57,8 @@ public class Athena extends AbstractGod {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
+            canMove = false;
+            canBuild = true;
 
             if (isHigher(original, t)) athena = true;
             else if (!isHigher(original, t)) athena = false;

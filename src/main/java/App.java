@@ -2,6 +2,10 @@ import java.io.IOException;
 import java.util.Map;
 
 import God.CardLogic;
+import God.Cards.Athena;
+import God.Cards.Demeter;
+import God.Cards.Minotaur;
+import God.Cards.Pan;
 import Player.Player;
 import Player.Worker;
 import com.github.jknack.handlebars.Handlebars;
@@ -29,9 +33,10 @@ public class App extends NanoHTTPD {
         super(8080);
 
         this.game = new Game();
-        // type of CardLogic is also hardcoded for now
-        this.gl0 = new GameLogic(game, game.getP0());
-        this.gl1 = new GameLogic(game, game.getP1());
+        // Option to hardcode gamelogic/god cards (game, player object)
+        // GameLogic = base logic, can also choose Pan, Demeter, Minotaur, or Athena
+//        this.gl0 = new GameLogic(game, game.getP0());
+//        this.gl1 = new GameLogic(game, game.getP1());
 
         // Option to hardcode the drops-pregame (x coord, y coord, worker id, player object)
 //        this.game.dropWorker(0, 0, 0, this.game.getP0());
@@ -53,17 +58,39 @@ public class App extends NanoHTTPD {
             Map<String, String> params = session.getParms();
             if (uri.equals("/newgame")) {
                 this.game = new Game();
-                // type of CardLogic is also hardcoded for now
-                this.gl0 = new GameLogic(game, game.getP0());
-                this.gl1 = new GameLogic(game, game.getP1());
+                gl0 = null;
+                gl1 = null;
+                // hardcode game logic on new game
+//                this.gl0 = new GameLogic(game, game.getP0());
+//                this.gl1 = new GameLogic(game, game.getP1());
 
-                // do we want to hardcode the drops on new game?
+                // hard dropping workers on new game
 //                this.game.dropWorker(0, 0, 0, this.game.getP0());
 //                this.game.dropWorker(1, 3, 1, this.game.getP0());
 //                this.game.dropWorker(4, 4, 0, this.game.getP1());
 //                this.game.dropWorker(3, 2, 1, this.game.getP1());
-            }
-            else if (uri.equals("/play")) {
+
+            } else if (uri.equals("/base")) {
+                if (gl0 == null) gl0 = new GameLogic(game, game.getP0());
+                else if (gl1 == null) gl1 = new GameLogic(game, game.getP1());
+                System.out.println("Created a base game");
+            } else if (uri.equals("/athena")) {
+                if (gl0 == null) gl0 = new Athena(game, game.getP0());
+                else if (gl1 == null) gl1 = new Athena(game, game.getP1());
+                System.out.println("Created Athena");
+            } else if (uri.equals("/demeter")) {
+                if (gl0 == null) gl0 = new Demeter(game, game.getP0());
+                else if (gl1 == null) gl1 = new Demeter(game, game.getP1());
+                System.out.println("Created Demeter");
+            } else if (uri.equals("/minotaur")) {
+                if (gl0 == null) gl0 = new Minotaur(game, game.getP0());
+                else if (gl1 == null) gl1 = new Minotaur(game, game.getP1());
+                System.out.println("Created Minotaur");
+            } else if (uri.equals("/pan")) {
+                if (gl0 == null) gl0 = new Pan(game, game.getP0());
+                else if (gl1 == null) gl1 = new Pan(game, game.getP1());
+                System.out.println("Created Pan");
+            } else if (uri.equals("/play")) {
                 Player turn = this.game.getCurrentPlayer();
                 int x = Integer.parseInt(params.get("x"));
                 int y = Integer.parseInt(params.get("y"));

@@ -18,8 +18,15 @@ public class UIProxy {
     }
 
     public static UIProxy forGame(CardLogic game1, CardLogic game2) {
-        Cell[] cells = getCells(game1, game2);
-        String instructions = getInstructions(game1, game2);
+        Cell[] cells;
+        String instructions;
+        if (game1 != null && game2 != null) {
+            cells = getCells(game1, game2);
+            instructions = getInstructions(game1, game2);
+        } else {
+            cells = new Cell[25];
+            instructions = "";
+        }
         return new UIProxy(instructions, cells);
     }
 

@@ -81,6 +81,8 @@ public class Demeter extends AbstractGod {
             firstX = -1;
             firstY = -1;
             game.switchCurrentPlayer();
+            canMove = true;
+            canBuild = false;
             return true;
         }
         return false;
@@ -101,6 +103,8 @@ public class Demeter extends AbstractGod {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
+            canMove = false;
+            canBuild = true;
             athena = false;
             return true;
         }

@@ -46,6 +46,8 @@ public class Pan extends AbstractGod {
     public boolean buildTower(int x, int y, int id) {
         if(this.buildHelper(x, y, id)) {
             game.switchCurrentPlayer();
+            canMove = true;
+            canBuild = false;
             return true;
         }
         return false;
@@ -68,6 +70,8 @@ public class Pan extends AbstractGod {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
+            canMove = false;
+            canBuild = true;
             int tLevel = t.getCurrentLevel();
             if (oldLevel - tLevel >= 2) { this.panFlag = true; }
             return true;

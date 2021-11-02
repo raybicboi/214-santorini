@@ -33,6 +33,8 @@ public class Minotaur extends AbstractGod {
     public boolean buildTower(int x, int y, int id) {
         if(this.buildHelper(x, y, id)) {
             game.switchCurrentPlayer();
+            canMove = true;
+            canBuild = false;
             return true;
         }
         return false;
@@ -53,6 +55,8 @@ public class Minotaur extends AbstractGod {
             Worker w = p.getWorker(workerId);
             Tile t = game.retrieveTile(x, y);
             p.changeWorkerTile(w, t);
+            canMove = false;
+            canBuild = true;
             athena = false;
             return true;
         }
